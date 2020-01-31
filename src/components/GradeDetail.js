@@ -15,7 +15,6 @@ class GradeDetail extends React.Component {
     super(props);
 
     if (props.location.state !== undefined) {
-      console.log(props.location.state.edit);
       let { row, type, score, tags, text } = props.location.state.edit;
       this.state = {
         editingRow: row,
@@ -56,7 +55,6 @@ class GradeDetail extends React.Component {
 
   handleSubmit = () => {
     if (this.state.editingRow !== undefined) {
-      console.log(this.state.editingRow)
       backend.edit(
         this.state.editingRow,
         this.props.delegation, 

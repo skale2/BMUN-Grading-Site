@@ -62,7 +62,7 @@ class Backend {
       this.auth.signIn();
     }
 
-    window.gapi.client.sheets.spreadsheets.values.append(
+    return window.gapi.client.sheets.spreadsheets.values.append(
       {
         spreadsheetId: SPREADSHEET_ID,
         includeGridData: false,
@@ -85,7 +85,7 @@ class Backend {
       }
     )
       .then(
-        response => console.log(response),
+        response => response,
         error => console.log(error)
       );
   } 
@@ -97,7 +97,7 @@ class Backend {
 
     // We add 1 to each row because sheet ranges are 1-indexed,
     // but all of our rows are stored 0-indexed.
-    window.gapi.client.sheets.spreadsheets.values.update(
+    return window.gapi.client.sheets.spreadsheets.values.update(
       {
         spreadsheetId: SPREADSHEET_ID,
         includeGridData: false,
@@ -119,7 +119,7 @@ class Backend {
       }
     )
       .then(
-        response => console.log(response),
+        response => response,
         error => console.log(error)
       );
   }
