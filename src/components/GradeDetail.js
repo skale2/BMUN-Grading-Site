@@ -80,8 +80,11 @@ class GradeDetail extends React.Component {
         this.state.score,
         this.state.tags,
         this.state.comments
-      );
-      message.success(`Edited ${this.props.delegation}!`);
+      )
+        .then(() => {
+          message.success(`Edited ${this.props.delegation}!`);
+          this.props.history.goBack();
+        });
     } else {
       backend.grade(
         this.props.delegation,
@@ -89,11 +92,12 @@ class GradeDetail extends React.Component {
         this.state.score,
         this.state.tags,
         this.state.comments
-      );
-      message.success(`Graded ${this.props.delegation}!`);
+      )
+        .then(() => {
+          message.success(`Graded ${this.props.delegation}!`);
+          this.props.history.goBack();
+        });
     }
-
-    this.props.history.goBack();
   };
 
   handleKeyPress = e => {
@@ -317,10 +321,9 @@ class GradeDetail extends React.Component {
             >
               <Row type="flex" align="middle" justify="space-between">
                 <Col span={5}>Submit</Col>
-                <Col span={11}></Col>
                 <Col span={7}>
-                  <div style={{ fontSize: "10px" }}>
-                    <div>SHIFT</div>
+                  <div style={{fontSize: "10px", marginRight: "1em"}}>
+                    <div style={{marginLeft: "2px"}}>SHIFT</div>
                     <div>ENTER</div>
                   </div>
                 </Col>
