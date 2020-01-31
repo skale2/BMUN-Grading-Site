@@ -1,28 +1,28 @@
 const DELEGATIONS = [
-  'Adolf A. Berle', 
-  "Basil O' Connor", 
-  'Benjamin V. Cohen', 
-  'Felix Frankfurter', 
-  'Frances Perkins', 
-  'George Peek', 
-  'Harold Ickes', 
-  'Harry Hopkins', 
-  'Henry Morgenthau Jr.', 
-  'Henry Thomas Rainey', 
-  'Huey Long', 
-  'Hugh S. Johnson', 
-  'Jim Farley', 
-  'Joe T. Robinson', 
-  'Louis Brandeis', 
-  'Louis McHenry Howe', 
-  'Marriner Eccles', 
-  "Paul M. O'Leary", 
-  'Raymond Moley', 
-  'Rexford Tugwell', 
-  'Robert C. Weaver', 
-  'Robert F. Wagner', 
-  'Thomas Gardiner Corcoran', 
-  'William Bankhead'
+  "Adolf A. Berle",
+  "Basil O' Connor",
+  "Benjamin V. Cohen",
+  "Felix Frankfurter",
+  "Frances Perkins",
+  "George Peek",
+  "Harold Ickes",
+  "Harry Hopkins",
+  "Henry Morgenthau Jr.",
+  "Henry Thomas Rainey",
+  "Huey Long",
+  "Hugh S. Johnson",
+  "Jim Farley",
+  "Joe T. Robinson",
+  "Louis Brandeis",
+  "Louis McHenry Howe",
+  "Marriner Eccles",
+  "Paul M. O'Leary",
+  "Raymond Moley",
+  "Rexford Tugwell",
+  "Robert C. Weaver",
+  "Robert F. Wagner",
+  "Thomas Gardiner Corcoran",
+  "William Bankhead"
 ];
 
 const TAGS = [
@@ -41,16 +41,16 @@ const TAGS = [
   "Leverages Resources",
   "On Topic",
   "Well Written Resolution",
-  "Makes Connections",
-]
+  "Makes Connections"
+];
 
 const ROWIdx = {
   datetime: 0,
   delegation: 1,
-  type: 2, 
+  type: 2,
   score: 3,
   tags: 4,
-  comments: 5,
+  comments: 5
 };
 
 const SPEAKERS_LIST = "Speaker's List";
@@ -60,24 +60,17 @@ const FORMAL = "Formal";
 const COMMENT = "Comment";
 const CRISIS = "Crisis";
 
-const Types = [
+const Types = [SPEAKERS_LIST, MODERATED, UNMODERATED, FORMAL, COMMENT, CRISIS];
+
+export {
   SPEAKERS_LIST,
   MODERATED,
   UNMODERATED,
   FORMAL,
   COMMENT,
-  CRISIS
-]
-
-export { 
-  SPEAKERS_LIST,
-  MODERATED, 
-  UNMODERATED, 
-  FORMAL, 
-  COMMENT, 
-  CRISIS, 
-  DELEGATIONS, 
-  TAGS, 
-  ROWIdx, 
-  Types,
+  CRISIS,
+  DELEGATIONS,
+  TAGS,
+  ROWIdx,
+  Types
 };
