@@ -33,6 +33,7 @@ class GradeDetail extends React.Component {
 
     if (props.location.state !== undefined) {
       let { row, type, score, tags, text } = props.location.state.edit;
+      console.log(text);
       this.state = {
         editingRow: row,
         focus: 0,
@@ -292,6 +293,7 @@ class GradeDetail extends React.Component {
               <Col span={18}>
                 <TextArea
                   rows={8}
+                  defaultValue={this.state.comments}
                   onChange={this.handleAddComment}
                   ref={comments => {
                     this.commentsRef = comments;
