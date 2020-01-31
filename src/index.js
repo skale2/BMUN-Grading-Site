@@ -1,12 +1,76 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import Base from './components/Base'
+import GradeList from './components/GradeList';
+import GradeDetail from './components/GradeDetail';
+import DelegationList from './components/DelegationList';
+import DelegationDetail from './components/DelegationDetail';
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import "./css/index.css";
+import Welcome from './components/Welcome';
+
+import backend from "./backend";
+
+ReactDOM.render(
+  <main>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/welcome" render={() => 
+          !backend.isSignedIn ? <Welcome /> : 
+            <Redirect to='/grade' />
+        }/>
+        <Route 
+          path="/grade/:delegation"
+          render={({ match: { params: { delegation } }, location: { pathname } }) => 
+            !backend.isSignedIn ? 
+              <Redirect to={{ pathname: "/welcome", state: { from: pathname } }} /> 
+            : 
+              <Base page="grade"> 
+                <GradeDetail delegation={delegation}/>
+              </Base>
+          }
+        />
+        <Route 
+          path="/grade"
+          render={({ location: { pathname } }) => 
+            !backend.isSignedIn ? 
+              <Redirect to={{ pathname: "/welcome", state: { from: pathname } }} /> 
+            : 
+              <Base page="grade"> 
+                <GradeList/>
+              </Base>
+          }
+        />
+        <Route 
+          path="/delegations/:delegation"
+          render={({ match : { params: { delegation } }, location: { pathname } }) => 
+            !backend.isSignedIn ? 
+              <Redirect to={{ pathname: "/welcome", state: { from: pathname } }} /> 
+            : 
+              <Base page="delegations"> 
+                <DelegationDetail delegation={delegation}/> 
+              </Base>
+          }
+        />
+        <Route 
+          path="/delegations"
+          render={({ location: { pathname } }) => 
+            !backend.isSignedIn ? 
+              <Redirect to={{ pathname: "/welcome", state: { from: pathname } }} /> 
+            : 
+              <Base page="delegations"> 
+                <DelegationList/> 
+              </Base>
+          }
+        />
+        <Route exact path="/" render={() => 
+          !backend.isSignedIn ? <Welcome /> : 
+            <Redirect to='/grade' />
+        }/>
+      </Switch>
+    </BrowserRouter>
+  </main>,
+  document.getElementById('root')
+);
