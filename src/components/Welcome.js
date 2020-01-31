@@ -18,7 +18,7 @@ class Welcome extends React.Component {
 
   signIn = () => {
     backend.signIn().then(() => {
-      if (this.props.location.state.from !== undefined)
+      if (this.props.location.state !== undefined)
         this.props.history.push(this.props.location.state.from);
       else this.props.history.push("/welcome");
     });
