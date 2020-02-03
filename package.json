@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/dark-theme": "^1.0.3",
     "antd": "^3.13.2",
     "gapi": "0.0.3",
     "react": "^16.8.2",

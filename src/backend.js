@@ -10,6 +10,7 @@ const DISCOVERY_DOCS = [
 ];
 const SCOPE =
   "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
+  
 function rowToObject(row, i) {
   return {
     row: i,
@@ -58,6 +59,27 @@ class Backend {
       return result;
     });
   };
+
+  delegations = () =>  {
+    if (!this.auth.isSignedIn.get()) {
+      this.auth.signIn();
+    }
+
+    return window.gapi.client.sheets.spreadsheets.values
+      .get({
+        spreadsheetId: SPREADSHEET_ID,
+        range: SHEET_RANGE,
+        dateTimeRenderOption: "FORMATTED_STRING",
+        majorDimension: "ROWS",
+        valueRenderOption: "FORMATTED_VALUE"
+      })
+      .then(
+        response =>
+          response.result.values
+            .map(rowToObject),
+        error => console.log(error)
+      );
+  }
 
   grade = (delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {

@@ -1,23 +1,47 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Empty } from "antd";
+import { Empty, Spin } from "antd";
 
-import { DELEGATIONS } from "../constants";
+import { DELEGATIONS, UNMODERATED } from "../constants";
 
 import SearchBar from "./SearchBar";
 import DelegationButton from "./DelegationButton";
+import backend from "../backend";
 
 class DelegationList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       delegations: DELEGATIONS.slice(),
+      timesSpoken: {},
       highlighted: null
     };
 
     for (var i = 0; i < DELEGATIONS.length; i++) {
       this[DELEGATIONS[i]] = React.createRef();
     }
+  }
+
+  componentDidMount() {
+    backend.delegations().then(result => {
+      let timesSpoken = {};
+
+      for (const delegationName of DELEGATIONS) {
+        timesSpoken[delegationName] = 0;
+      }
+
+      for (const row of result) {
+        if (row.type !== UNMODERATED) {
+          timesSpoken[row.delegation]++;
+        }
+      }
+
+      this.setState({ 
+        loading: false, 
+        timesSpoken: timesSpoken 
+      });
+    });
   }
 
   dispatchUpdate = (delegations, emptyQuery) => {
@@ -34,6 +58,13 @@ class DelegationList extends React.Component {
   };
 
   render() {
+    if (this.state.loading)
+      return (
+        <div style={{ width: "1em", margin: "auto" }}>
+          <Spin size="large" />
+        </div>
+      );
+
     return (
       <div onKeyPress={this.handleKeyPress}>
         <SearchBar
@@ -55,6 +86,7 @@ class DelegationList extends React.Component {
               <DelegationButton
                 highlighted={i === 0 && this.state.highlighted != null}
                 type="delegations"
+                timesSpoken={this.state.timesSpoken[name]}
                 ref={this[name]}
                 key={i}
               >

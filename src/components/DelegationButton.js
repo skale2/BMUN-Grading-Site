@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Icon, Button } from "antd";
+import { Row, Col, Icon, Button } from "antd";
 import { Link } from "react-router-dom";
 
 class DelegationButton extends React.Component {
@@ -30,12 +30,20 @@ class DelegationButton extends React.Component {
             >
               {this.props.children}
             </div>
-            {this.props.highlighted ? (
-              <div style={{ float: "right" }}>
-                <Icon type="enter" style={{ marginRight: "5px" }} />
-                <div style={{ fontSize: "12px", fontWeight: 700 }}>ENTER</div>
-              </div>
-            ) : null}
+            <div style={{ float: "right" }}>
+              <Row type='flex' gutter={20}>
+                {this.props.highlighted ? (
+                  <Col>
+                    <Icon type="enter" style={{ marginRight: "5px" }} />
+                    <div style={{ fontSize: "12px", fontWeight: 700 }}>ENTER</div>
+                  </Col>
+                ) : null}
+                <Col style={{ paddingTop: 2 }}>
+                  <div style={{ fontSize: "16px", fontWeight: 400 }}>{this.props.timesSpoken}</div>
+                  <div style={{ fontSize: "12px", fontWeight: 700 }}>speeches</div>
+                </Col>
+              </Row>
+            </div>
           </Button>
         </Link>
       </Row>
