@@ -10,7 +10,7 @@ const DISCOVERY_DOCS = [
 ];
 const SCOPE =
   "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
-  
+
 function rowToObject(row, i) {
   return {
     row: i,
@@ -18,7 +18,7 @@ function rowToObject(row, i) {
     delegation: row[1],
     type: Types[parseInt(row[2])],
     score: parseInt(row[3]),
-    tags: row[4] !== undefined ? row[4].split(",") : [],
+    tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
     text: row[5] !== undefined ? row[5] : ""
   };
 }
@@ -60,7 +60,7 @@ class Backend {
     });
   };
 
-  delegations = () =>  {
+  delegations = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -74,12 +74,10 @@ class Backend {
         valueRenderOption: "FORMATTED_VALUE"
       })
       .then(
-        response =>
-          response.result.values
-            .map(rowToObject),
+        response => response.result.values.map(rowToObject),
         error => console.log(error)
       );
-  }
+  };
 
   grade = (delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {

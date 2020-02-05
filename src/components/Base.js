@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Layout, Menu, Icon, Row, Col } from "antd";
+import { Layout, Menu, Icon, Row, Col, Affix } from "antd";
 import { Link } from "react-router-dom";
-
 const { Content } = Layout;
 
 const Base = props => {
@@ -40,9 +39,7 @@ const Base = props => {
             </Menu>
           </Col>
         </Row>
-        <Content
-          style={{ background: "white", width: "70%", margin: "3em auto" }}
-        >
+        <Content style={{ background: "white", width: "70%", margin: "3em auto" }}>
           {props.children}
         </Content>
       </Layout>

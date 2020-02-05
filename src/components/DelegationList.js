@@ -37,9 +37,9 @@ class DelegationList extends React.Component {
         }
       }
 
-      this.setState({ 
-        loading: false, 
-        timesSpoken: timesSpoken 
+      this.setState({
+        loading: false,
+        timesSpoken: timesSpoken
       });
     });
   }

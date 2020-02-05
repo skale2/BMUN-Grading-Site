@@ -9,7 +9,7 @@ import {
   Tag,
   Empty,
   Spin,
-  Modal,
+  Popconfirm,
   message
 } from "antd";
 import { Link } from "react-router-dom";
@@ -129,14 +129,19 @@ class DelegationDetail extends React.Component {
                   </Link>
                 </Col>
                 <Col style={{ fontSize: "20px", fontWeight: "600" }}>
-                  <Button
-                    icon="delete"
-                    shape="circle"
-                    type="danger"
-                    onClick={() =>
-                      this.setState({ deletingComment: comment.row })
-                    }
-                  />
+                  <Popconfirm
+                    title="Are you sure you want to delete this comment?"
+                    onConfirm={() => this.deleteComment(comment.row)}
+                    onCancel={() => null}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Button
+                      icon="delete"
+                      shape="circle"
+                      type="danger"
+                    />
+                  </Popconfirm>
                 </Col>
               </Row>
             </Col>
@@ -292,29 +297,6 @@ class DelegationDetail extends React.Component {
             </div>
           )}
         </Row>
-        <Modal
-          title="Confirm deletion"
-          visible={this.state.deletingComment !== undefined}
-          onOk={() => this.deleteComment(this.state.deletingComment)}
-          onCancel={() => this.setState({ deletingComment: undefined })}
-          footer={[
-            <Button
-              key="Not Really"
-              onClick={() => this.setState({ deletingComment: undefined })}
-            >
-              Not Really
-            </Button>,
-            <Button
-              key="Yes"
-              type="primary"
-              onClick={() => this.deleteComment(this.state.deletingComment)}
-            >
-              Yes
-            </Button>
-          ]}
-        >
-          Are you sure you want to delete this comment?
-        </Modal>
       </div>
     );
   }
