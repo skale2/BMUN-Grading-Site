@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Layout, Menu, Icon, Row, Col, Affix } from "antd";
+import { Layout, Menu, Icon, Row, Col } from "antd";
 import { Link } from "react-router-dom";
 const { Content } = Layout;
 

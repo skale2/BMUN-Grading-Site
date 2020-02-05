@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Button, Result } from "antd";
+import { Link } from "react-router-dom";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
 import Base from "./components/Base";
@@ -94,6 +96,21 @@ ReactDOM.render(
           path="/"
           render={() =>
             !backend.isSignedIn ? <Welcome /> : <Redirect to="/grade" />
+          }
+        />
+        <Route 
+          path="/"
+          render={() => 
+            <Result
+              status="404"
+              title="404"
+              subTitle="You shouldn't be here"
+              extra={
+                <Link to="/">
+                  <Button type="primary">Back home</Button>
+                </Link>
+              }
+            />
           }
         />
       </Switch>
