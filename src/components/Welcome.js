@@ -9,7 +9,7 @@ class Welcome extends React.Component {
     this.state = {
       clientLoaded: false
     };
-    backend.backendLoadedListeners.push(this.onBackendLoaded);
+    backend.isReadyCallbacks.push(this.onBackendLoaded);
   }
 
   onBackendLoaded = () => {

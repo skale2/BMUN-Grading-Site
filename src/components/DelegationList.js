@@ -18,17 +18,17 @@ class DelegationList extends React.Component {
       highlighted: null
     };
 
-    for (var i = 0; i < DELEGATIONS.length; i++) {
-      this[DELEGATIONS[i]] = React.createRef();
+    for (const delegation of DELEGATIONS) {
+      this[delegation] = React.createRef();
     }
   }
 
   componentDidMount() {
-    backend.delegations().then(result => {
+    backend.comments().then(result => {
       let timesSpoken = {};
 
-      for (const delegationName of DELEGATIONS) {
-        timesSpoken[delegationName] = 0;
+      for (const delegation of DELEGATIONS) {
+        timesSpoken[delegation] = 0;
       }
 
       for (const row of result) {

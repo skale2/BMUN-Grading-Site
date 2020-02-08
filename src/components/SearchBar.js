@@ -53,7 +53,7 @@ class SearchBar extends React.Component {
 
   updateResults = event => {
     let node = this.state.node;
-    let value = event.target.value;
+    let value = event.target.value.trim();
     let offPath = this.state.offPath;
 
     // If the user deleted some characters from their query

@@ -1,7 +1,8 @@
 import { Types } from "./constants";
 
 const SPREADSHEET_ID = "1YRL6pDIMz0ZK5Q0pSmC-_uf2mKMfTYV21dODlqyPGak";
-const SHEET_RANGE = "Sheet1!A:F";
+const COMMITTEES_SHEET_RANGE = "Committees!A:B";
+const JCC_SHEET_RANGE = "Sheet1!A:F";
 const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
 const CLIENT_ID =
   "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
@@ -28,7 +29,7 @@ class Backend {
     this.isSignedIn = false;
     this.auth = null;
     this.user = null;
-    this.backendLoadedListeners = [];
+    this.isReadyCallbacks = [];
 
     window.gapi.load("client:auth2", this.initClient);
   }
@@ -45,8 +46,8 @@ class Backend {
         () => {
           this.auth = window.gapi.auth2.getAuthInstance();
           this.isSignedIn = this.auth.isSignedIn.get();
-          for (var i = 0; i < this.backendLoadedListeners.length; i++) {
-            this.backendLoadedListeners[i]();
+          for (let callback of this.isReadyCallbacks) {
+            callback();
           }
         },
         error => console.log(error)
@@ -60,7 +61,7 @@ class Backend {
     });
   };
 
-  delegations = () => {
+  comments = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -68,7 +69,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: SPREADSHEET_ID,
-        range: SHEET_RANGE,
+        range: JCC_SHEET_RANGE,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -91,11 +92,11 @@ class Backend {
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
-          range: SHEET_RANGE
+          range: JCC_SHEET_RANGE
         },
         {
           majorDimension: "ROWS",
-          range: SHEET_RANGE,
+          range: JCC_SHEET_RANGE,
           values: [
             [
               Date.now(),
@@ -158,7 +159,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: SPREADSHEET_ID,
-        range: SHEET_RANGE,
+        range: JCC_SHEET_RANGE,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"

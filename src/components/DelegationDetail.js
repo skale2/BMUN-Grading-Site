@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import {
   Button,
   Row,
@@ -302,4 +303,4 @@ class DelegationDetail extends React.Component {
   }
 }
 
-export default DelegationDetail;
+export default withRouter(DelegationDetail);
