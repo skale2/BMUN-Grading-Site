@@ -2,6 +2,7 @@ import React from "react";
 
 import { Layout, Menu, Icon, Row, Col } from "antd";
 import { Link } from "react-router-dom";
+import ScrollableAnchor from "react-scrollable-anchor";
 
 import { COMMITTEES } from "../constants";
 
@@ -9,7 +10,7 @@ const { Content } = Layout;
 
 const Base = props => {
   return (
-    <div>
+    <ScrollableAnchor id={"base"}>
       <Layout style={{ margin: "2% 7%", background: "white" }}>
         <Row style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}>
           <Link to="/welcome">
@@ -55,7 +56,7 @@ const Base = props => {
           {props.children}
         </Content>
       </Layout>
-    </div>
+    </ScrollableAnchor>
   );
 };
 

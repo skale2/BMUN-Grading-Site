@@ -139,7 +139,7 @@ class DelegationDetail extends React.Component {
                     okText="Yes"
                     cancelText="No"
                   >
-                    <Button icon="delete" shape="circle" type="danger" />
+                    <Button icon="delete" shape="circle" type="danger"/>
                   </Popconfirm>
                 </Col>
               </Row>

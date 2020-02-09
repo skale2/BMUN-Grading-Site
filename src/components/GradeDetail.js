@@ -63,6 +63,10 @@ class GradeDetail extends React.Component {
     document.addEventListener("keydown", this.handleKeyPress);
   }
 
+  componentDidMount() {
+    goToAnchor("base");
+  }
+
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyPress);
   }
@@ -178,10 +182,11 @@ class GradeDetail extends React.Component {
 
         <ScrollableAnchor id={"type"}>
           <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex">
-              <Col span={6} style={{ fontSize: "25px", fontWeight: 600 }}>
+            <Row type="flex" align="middle">
+              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
                 Type
               </Col>
+              <Col span={2} />
               <Col span={18}>
                 <Row type="flex" justify="center">
                   {[
@@ -231,10 +236,11 @@ class GradeDetail extends React.Component {
         </ScrollableAnchor>
         <ScrollableAnchor id={"score"}>
           <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex">
-              <Col span={6} style={{ fontSize: "25px", fontWeight: 600 }}>
+            <Row type="flex" align="middle">
+              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
                 Score
               </Col>
+              <Col span={2} />
               <Col span={18}>
                 <Row type="flex" justify="center" style={{ margin: "0em 4em" }}>
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val, i) => (
@@ -265,10 +271,11 @@ class GradeDetail extends React.Component {
         </ScrollableAnchor>
         <ScrollableAnchor id={"tags"}>
           <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex">
-              <Col span={6} style={{ fontSize: "25px", fontWeight: 600 }}>
+            <Row type="flex" align="middle">
+              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
                 Tags
               </Col>
+              <Col span={2} />
               <Col span={18}>
                 {TAGS.map((val, i) => (
                   <Tag.CheckableTag
@@ -290,10 +297,11 @@ class GradeDetail extends React.Component {
         </ScrollableAnchor>
         <ScrollableAnchor id={"comments"}>
           <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex">
-              <Col span={6} style={{ fontSize: "25px", fontWeight: 600 }}>
+            <Row type="flex" align="middle">
+              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
                 Comments
               </Col>
+              <Col span={2} />
               <Col span={18}>
                 <TextArea
                   rows={8}
