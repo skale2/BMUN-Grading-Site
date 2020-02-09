@@ -25,15 +25,15 @@ class CommitteeSelect extends React.Component {
     });
   };
 
-	handleKeyPress = e => {
+  handleKeyPress = e => {
     if (e.key === "Enter" && this.state.highlighted) {
-      this.props.gotoCommittee(this.state.highlighted)
+      this.props.gotoCommittee(this.state.highlighted);
     }
   };
 
   render() {
     return (
-			<div onKeyPress={this.handleKeyPress}>
+      <div onKeyPress={this.handleKeyPress}>
         <SearchBar
           values={Object.values(COMMITTEES)}
           dispatchUpdate={this.dispatchUpdate}

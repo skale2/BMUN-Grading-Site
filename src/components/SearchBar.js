@@ -90,7 +90,7 @@ class SearchBar extends React.Component {
       offPath = offPath + value.length - i;
     }
 
-    console.log(node)
+    console.log(node);
 
     // Update where we are now
     this.setState({
