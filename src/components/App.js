@@ -42,11 +42,7 @@ class App extends React.Component {
             <Route
               path="/welcome"
               render={() =>
-                !backend.isReady || true ? (
-                  <Welcome />
-                ) : (
-                  <Redirect to="/grade" />
-                )
+                <Welcome />
               }
             />
             <Route
@@ -159,7 +155,7 @@ class App extends React.Component {
               exact
               path="/"
               render={() =>
-                !backend.isReady ? <Welcome /> : <Redirect to="/grade" />
+               	<Redirect to="/welcome" />
               }
             />
             <Route
