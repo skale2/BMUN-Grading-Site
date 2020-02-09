@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Result, Affix } from "antd";
+import { Button, Result } from "antd";
 import { Link } from "react-router-dom";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
