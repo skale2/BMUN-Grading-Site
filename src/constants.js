@@ -1,54 +1,59 @@
-const DELEGATIONS = [
-  "Adolf A. Berle",
-  "Al Smith",
-  "Alfred P. Sloan",
-  "Andrew Mellon",
-  "Basil O' Connor",
-  "Benjamin V. Cohen",
-  "Bertrand Snell",
-  "Dean Acheson",
-  "Eugene Meyer",
-  "Felix Frankfurter",
-  "Frances Perkins",
-  "Frank Knox",
-  "Frederick Steiwer",
-  "George Peek",
-  "Harold Ickes",
-  "Harry F. Byrd",
-  "Harry Hopkins",
-  "Henry Morgenthau Jr.",
-  "Henry Thomas Rainey",
-  "Huey Long",
-  "Hugh S. Johnson",
-  "Irénée du Pont",
-  "James Wolcott Wadsworth Jr.",
-  "Jim Farley",
-  "Joe T. Robinson",
-  "John Davis",
-  "John Howard Pew",
-  "Jouett Shouse",
-  "Lester Dickinson",
-  "Lewis Douglas",
-  "Louis Brandeis",
-  "Louis McHenry Howe",
-  "Marriner Eccles",
-  "Milton Friedman",
-  "Nathan L. Miller",
-  "Odgen Mills",
-  "Paul M. O'Leary",
-  "Pierre du Pont",
-  "Raymond Moley",
-  "Rexford Tugwell",
-  "Robert A. Taft",
-  "Robert C. Weaver",
-  "Robert F. Wagner",
-  "Robert Luce",
-  "Rush Holt Sr.",
-  "Thomas Gardiner Corcoran",
-  "Wendell Willkie",
-  "William Bankhead",
-  "William Randolph Hearst"
-];
+const DELEGATIONS = {
+  jcc_new_deal: [
+    "Adolf A. Berle",
+    "Basil O' Connor",
+    "Benjamin V. Cohen",
+    "F. Palmer Weber",
+    "Felix Frankfurter",
+    "Frances Perkins",
+    "George Peek",
+    "Harold Ickes",
+    "Harry Hopkins",
+    "Henry Morgenthau Jr.",
+    "Henry Thomas Rainey",
+    "Huey Long",
+    "Hugh S. Johnson",
+    "Jim Farley",
+    "Joe T. Robinson",
+    "Louis Brandeis",
+    "Louis McHenry Howe",
+    "Marriner Eccles",
+    "Paul M. O'Leary",
+    "Raymond Moley",
+    "Rexford Tugwell",
+    "Robert C. Weaver",
+    "Robert F. Wagner",
+    "Thomas Gardiner Corcoran",
+    "William Bankhead"
+  ],
+  jcc_old_guard: [
+    "Al Smith",
+    "Alfred P. Sloan",
+    "Andrew Mellon",
+    "Bertrand Snell",
+    "Dean Acheson",
+    "Eugene Meyer",
+    "Frank Knox",
+    "Frederick Steiwer",
+    "Harry F. Byrd",
+    "Irénée du Pont",
+    "James Wolcott Wadsworth Jr.",
+    "John Davis",
+    "John Howard Pew",
+    "Jouett Shouse",
+    "Lester Dickinson",
+    "Lewis Douglas",
+    "Milton Friedman",
+    "Nathan L. Miller",
+    "Odgen Mills",
+    "Pierre du Pont",
+    "Robert A. Taft",
+    "Robert Luce",
+    "Rush Holt Sr.",
+    "Wendell Willkie",
+    "William Randolph Hearst"
+  ]
+};
 
 const TAGS = [
   "Great Points",
@@ -69,6 +74,16 @@ const TAGS = [
   "Makes Connections"
 ];
 
+const COMMITTEES = {
+  jcc_new_deal: "JCC New Deal",
+  jcc_old_guard: "JCC Old Guard"
+};
+
+const COMMITTEES_REVERSE = {};
+for (const committee in COMMITTEES) {
+  COMMITTEES_REVERSE[COMMITTEES[committee]] = committee;
+}
+
 const ROWIdx = {
   datetime: 0,
   delegation: 1,
@@ -88,6 +103,8 @@ const CRISIS = "Crisis";
 const Types = [SPEAKERS_LIST, MODERATED, UNMODERATED, FORMAL, COMMENT, CRISIS];
 
 export {
+  COMMITTEES,
+  COMMITTEES_REVERSE,
   SPEAKERS_LIST,
   MODERATED,
   UNMODERATED,

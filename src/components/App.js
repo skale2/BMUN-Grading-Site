@@ -11,6 +11,7 @@ import DelegationDetail from "./DelegationDetail";
 
 import { Spin } from "antd";
 import Welcome from "./Welcome";
+import { COMMITTEES } from "../constants";
 
 import backend from "../backend";
 
@@ -18,7 +19,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { backendIsReady: false };
-		backend.isReadyCallbacks.push(this.backendReady)
+    backend.isReadyCallbacks.push(this.backendReady);
   }
 
   backendReady = () => {
@@ -28,115 +29,159 @@ class App extends React.Component {
   render() {
     if (!this.state.backendIsReady) {
       return (
-        <div style={{ width: "1em", margin: "12em auto 0em" }}>
+        <div style={{ width: "1em", margin: "25% auto 0%" }}>
           <Spin size="large" />
         </div>
       );
     }
 
     return (
-			<div>
-				<BrowserRouter>
-					<Switch>
-						<Route
-							path="/welcome"
-							render={() =>
-								!backend.isSignedIn ? <Welcome /> : <Redirect to="/grade" />
-							}
-						/>
-						<Route
-							path="/grade/:delegation"
-							render={({
-								match: {
-									params: { delegation }
-								},
-								location: { pathname }
-							}) =>
-								!backend.isSignedIn ? (
-									<Redirect
-										to={{ pathname: "/welcome", state: { from: pathname } }}
-									/>
-								) : (
-									<Base page="grade">
-										<GradeDetail delegation={delegation} />
-									</Base>
-								)
-							}
-						/>
-						<Route
-							path="/grade"
-							render={({ location: { pathname } }) => {
-								return !backend.isSignedIn ? (
-									<Redirect
-										to={{ pathname: "/welcome", state: { from: pathname } }}
-									/>
-								) : (
-									<Base page="grade">
-										<GradeList />
-									</Base>
-								);
-							}}
-						/>
-						<Route
-							path="/delegations/:delegation"
-							render={({
-								match: {
-									params: { delegation }
-								},
-								location: { pathname }
-							}) =>
-								!backend.isSignedIn ? (
-									<Redirect
-										to={{ pathname: "/welcome", state: { from: pathname } }}
-									/>
-								) : (
-									<Base page="delegations">
-										<DelegationDetail delegation={delegation} />
-									</Base>
-								)
-							}
-						/>
-						<Route
-							path="/delegations"
-							render={({ location: { pathname } }) =>
-								!backend.isSignedIn ? (
-									<Redirect
-										to={{ pathname: "/welcome", state: { from: pathname } }}
-									/>
-								) : (
-									<Base page="delegations">
-										<DelegationList />
-									</Base>
-								)
-							}
-						/>
-						<Route
-							exact
-							path="/"
-							render={() =>
-								!backend.isSignedIn ? <Welcome /> : <Redirect to="/grade" />
-							}
-						/>
-						<Route
-							path="/"
-							render={() => (
-								<Result
-									status="404"
-									title="404"
-									subTitle="🔫 you shouldn't be here 🔫"
-									extra={
-										<Link to="/">
-											<Button type="primary">
-												yo imma leave right mfing now
-											</Button>
-										</Link>
-									}
-								/>
-							)}
-						/>
-					</Switch>
-				</BrowserRouter>
-			</div>
+      <div>
+        <BrowserRouter>
+          <Switch>
+            <Route
+              path="/welcome"
+              render={() =>
+                !backend.isReady || true ? (
+                  <Welcome />
+                ) : (
+                  <Redirect to="/grade" />
+                )
+              }
+            />
+            <Route
+              path="/:committee/grade/:delegation"
+              render={({
+                match: {
+                  params: { committee, delegation }
+                },
+                location: { pathname }
+              }) => {
+                if (!backend.isReady)
+                  return (
+                    <Redirect
+                      to={{ pathname: "/welcome", state: { from: pathname } }}
+                    />
+                  );
+
+                if (!Object.keys(COMMITTEES).includes(committee))
+                  return <Redirect to="/not_found" />;
+
+                return (
+                  <Base page="grade" committee={committee}>
+                    <GradeDetail
+                      committee={committee}
+                      delegation={delegation}
+                    />
+                  </Base>
+                );
+              }}
+            />
+            <Route
+              path="/:committee/grade"
+              render={({
+                match: {
+                  params: { committee }
+                },
+                location: { pathname }
+              }) => {
+                if (!backend.isReady)
+                  return (
+                    <Redirect
+                      to={{ pathname: "/welcome", state: { from: pathname } }}
+                    />
+                  );
+
+                if (!Object.keys(COMMITTEES).includes(committee))
+                  return <Redirect to="/not_found" />;
+
+                return (
+                  <Base page="grade" committee={committee}>
+                    <GradeList committee={committee} />
+                  </Base>
+                );
+              }}
+            />
+            <Route
+              path="/:committee/delegations/:delegation"
+              render={({
+                match: {
+                  params: { committee, delegation }
+                },
+                location: { pathname }
+              }) => {
+                if (!backend.isReady)
+                  return (
+                    <Redirect
+                      to={{ pathname: "/welcome", state: { from: pathname } }}
+                    />
+                  );
+
+                if (!Object.keys(COMMITTEES).includes(committee))
+                  return <Redirect to="/not_found" />;
+
+                return (
+                  <Base page="delegations" committee={committee}>
+                    <DelegationDetail
+                      committee={committee}
+                      delegation={delegation}
+                    />
+                  </Base>
+                );
+              }}
+            />
+            <Route
+              path="/:committee/delegations"
+              render={({
+                match: {
+                  params: { committee }
+                },
+                location: { pathname }
+              }) => {
+                if (!backend.isReady)
+                  return (
+                    <Redirect
+                      to={{ pathname: "/welcome", state: { from: pathname } }}
+                    />
+                  );
+
+                if (!Object.keys(COMMITTEES).includes(committee))
+                  return <Redirect to="/not_found" />;
+
+                return (
+                  <Base page="delegations" committee={committee}>
+                    <DelegationList committee={committee} />
+                  </Base>
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/"
+              render={() =>
+                !backend.isReady ? <Welcome /> : <Redirect to="/grade" />
+              }
+            />
+            <Route
+              path="/"
+              render={() => (
+                <Result
+                  status="404"
+                  title="404"
+                  subTitle="🔫 you shouldn't be here 🔫"
+                  extra={
+                    <Link to="/">
+                      <Button type="primary">
+                        yo imma leave right mfing now
+                      </Button>
+                    </Link>
+                  }
+                />
+              )}
+            />
+          </Switch>
+        </BrowserRouter>
+      </div>
     );
   }
 }

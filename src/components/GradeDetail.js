@@ -63,36 +63,36 @@ class GradeDetail extends React.Component {
     document.addEventListener("keydown", this.handleKeyPress);
   }
 
-  componentDidMount() {
-    goToAnchor("type");
-  }
-
   componentWillUnmount() {
     document.removeEventListener("keydown", this.handleKeyPress);
   }
 
   handleSubmit = () => {
     if (this.state.editingRow !== undefined) {
-      backend.edit(
-        this.state.editingRow,
-        this.props.delegation,
-        this.state.type,
-        this.state.score,
-        this.state.tags,
-        this.state.comments
-      )
+      backend
+        .edit(
+          this.props.committee,
+          this.state.editingRow,
+          this.props.delegation,
+          this.state.type,
+          this.state.score,
+          this.state.tags,
+          this.state.comments
+        )
         .then(() => {
           message.success(`Edited ${this.props.delegation}!`);
           this.props.history.goBack();
         });
     } else {
-      backend.grade(
-        this.props.delegation,
-        this.state.type,
-        this.state.score,
-        this.state.tags,
-        this.state.comments
-      )
+      backend
+        .grade(
+          this.props.committee,
+          this.props.delegation,
+          this.state.type,
+          this.state.score,
+          this.state.tags,
+          this.state.comments
+        )
         .then(() => {
           message.success(`Graded ${this.props.delegation}!`);
           this.props.history.goBack();
@@ -322,8 +322,8 @@ class GradeDetail extends React.Component {
               <Row type="flex" align="middle" justify="space-between">
                 <Col span={5}>Submit</Col>
                 <Col span={7}>
-                  <div style={{fontSize: "10px", marginRight: "1em"}}>
-                    <div style={{marginLeft: "2px"}}>SHIFT</div>
+                  <div style={{ fontSize: "10px", marginRight: "1em" }}>
+                    <div style={{ marginLeft: "2px" }}>SHIFT</div>
                     <div>ENTER</div>
                   </div>
                 </Col>

@@ -1,8 +1,6 @@
 import { Types } from "./constants";
 
-const SPREADSHEET_ID = "1YRL6pDIMz0ZK5Q0pSmC-_uf2mKMfTYV21dODlqyPGak";
-const COMMITTEES_SHEET_RANGE = "Committees!A:B";
-const JCC_SHEET_RANGE = "Sheet1!A:F";
+const SPREADSHEET_ID = "1eczM3E4dLINpE4SUd8XORhm7XD_JgrnDbuT0_DDuG5A";
 const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
 const CLIENT_ID =
   "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
@@ -26,7 +24,7 @@ function rowToObject(row, i) {
 
 class Backend {
   constructor() {
-    this.isSignedIn = false;
+    this.isReady = false;
     this.auth = null;
     this.user = null;
     this.isReadyCallbacks = [];
@@ -45,7 +43,7 @@ class Backend {
       .then(
         () => {
           this.auth = window.gapi.auth2.getAuthInstance();
-          this.isSignedIn = this.auth.isSignedIn.get();
+          this.isReady = this.auth.isSignedIn.get();
           for (let callback of this.isReadyCallbacks) {
             callback();
           }
@@ -56,12 +54,12 @@ class Backend {
 
   signIn = () => {
     return this.auth.signIn().then(result => {
-      this.isSignedIn = true;
+      this.isReady = true;
       return result;
     });
   };
 
-  comments = () => {
+  comments = committee => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -69,7 +67,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: SPREADSHEET_ID,
-        range: JCC_SHEET_RANGE,
+        range: `${committee}!A:F`,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -80,7 +78,7 @@ class Backend {
       );
   };
 
-  grade = (delegation, type, score, tags, text) => {
+  grade = (committee, delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -92,11 +90,11 @@ class Backend {
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
-          range: JCC_SHEET_RANGE
+          range: `${committee}!A:F`
         },
         {
           majorDimension: "ROWS",
-          range: JCC_SHEET_RANGE,
+          range: `${committee}!A:F`,
           values: [
             [
               Date.now(),
@@ -115,7 +113,7 @@ class Backend {
       );
   };
 
-  edit = (row, delegation, type, score, tags, text) => {
+  edit = (committee, row, delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -128,11 +126,11 @@ class Backend {
           spreadsheetId: SPREADSHEET_ID,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
-          range: `Sheet1!A${row + 1}:F${row + 1}`
+          range: `${committee}!A${row + 1}:F${row + 1}`
         },
         {
           majorDimension: "ROWS",
-          range: `Sheet1!A${row + 1}:F${row + 1}`,
+          range: `${committee}!A${row + 1}:F${row + 1}`,
           values: [
             [
               Date.now(),
@@ -151,7 +149,7 @@ class Backend {
       );
   };
 
-  status = delegation => {
+  status = (committee, delegation) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -159,7 +157,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: SPREADSHEET_ID,
-        range: JCC_SHEET_RANGE,
+        range: `${committee}!A:F`,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -173,7 +171,7 @@ class Backend {
       );
   };
 
-  deleteComment = row => {
+  deleteComment = (committee, row) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }

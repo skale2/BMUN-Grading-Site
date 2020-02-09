@@ -47,7 +47,9 @@ class DelegationDetail extends React.Component {
   }
 
   componentDidMount() {
-    backend.status(this.props.delegation).then(this.setDelegationInfo);
+    backend
+      .status(this.props.committee, this.props.delegation)
+      .then(this.setDelegationInfo);
   }
 
   setDelegationInfo = responses => {
@@ -98,7 +100,7 @@ class DelegationDetail extends React.Component {
 
   deleteComment = row => {
     backend
-      .deleteComment(row)
+      .deleteComment(this.props.committee, row)
       .then(() => backend.status(this.props.delegation))
       .then(this.setDelegationInfo);
     this.setState({ deletingComment: undefined });
@@ -122,7 +124,7 @@ class DelegationDetail extends React.Component {
                 <Col style={{ fontSize: "20px", fontWeight: "600" }}>
                   <Link
                     to={{
-                      pathname: `/grade/${this.props.delegation}`,
+                      pathname: `/${this.props.committee}/grade/${this.props.delegation}`,
                       state: { edit: comment }
                     }}
                   >
@@ -137,11 +139,7 @@ class DelegationDetail extends React.Component {
                     okText="Yes"
                     cancelText="No"
                   >
-                    <Button
-                      icon="delete"
-                      shape="circle"
-                      type="danger"
-                    />
+                    <Button icon="delete" shape="circle" type="danger" />
                   </Popconfirm>
                 </Col>
               </Row>
@@ -189,7 +187,9 @@ class DelegationDetail extends React.Component {
             {this.props.delegation}
           </Col>
           <Col style={{ marginTop: "10px" }}>
-            <Link to={`/grade/${this.props.delegation}`}>
+            <Link
+              to={`/${this.props.committee}/grade/${this.props.delegation}`}
+            >
               <Button size="large" type="primary">
                 Grade
               </Button>
