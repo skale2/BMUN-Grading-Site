@@ -344,7 +344,7 @@ class GradeDetail extends React.Component {
           </Form.Item>
         </ScrollableAnchor>
         <Form.Item>
-          <Affix offsetBottom={50}>
+          <Affix offsetBottom={100}>
             <Button
               type="primary"
               size="large"
