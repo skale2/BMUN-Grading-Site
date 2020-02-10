@@ -183,7 +183,14 @@ class GradeDetail extends React.Component {
         <ScrollableAnchor id={"type"}>
           <Form.Item style={{ margin: "7em 0em" }}>
             <Row type="flex" align="middle">
-              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
+              <Col
+                span={4}
+                style={{
+                  textAlign: "right",
+                  fontSize: "25px",
+                  fontWeight: 600
+                }}
+              >
                 Type
               </Col>
               <Col span={2} />
@@ -237,7 +244,14 @@ class GradeDetail extends React.Component {
         <ScrollableAnchor id={"score"}>
           <Form.Item style={{ margin: "7em 0em" }}>
             <Row type="flex" align="middle">
-              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
+              <Col
+                span={4}
+                style={{
+                  textAlign: "right",
+                  fontSize: "25px",
+                  fontWeight: 600
+                }}
+              >
                 Score
               </Col>
               <Col span={2} />
@@ -272,7 +286,14 @@ class GradeDetail extends React.Component {
         <ScrollableAnchor id={"tags"}>
           <Form.Item style={{ margin: "7em 0em" }}>
             <Row type="flex" align="middle">
-              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
+              <Col
+                span={4}
+                style={{
+                  textAlign: "right",
+                  fontSize: "25px",
+                  fontWeight: 600
+                }}
+              >
                 Tags
               </Col>
               <Col span={2} />
@@ -298,7 +319,14 @@ class GradeDetail extends React.Component {
         <ScrollableAnchor id={"comments"}>
           <Form.Item style={{ margin: "7em 0em" }}>
             <Row type="flex" align="middle">
-              <Col span={4} style={{ textAlign: "right", fontSize: "25px", fontWeight: 600 }}>
+              <Col
+                span={4}
+                style={{
+                  textAlign: "right",
+                  fontSize: "25px",
+                  fontWeight: 600
+                }}
+              >
                 Comments
               </Col>
               <Col span={2} />

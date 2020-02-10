@@ -54,7 +54,9 @@ class DelegationList extends React.Component {
 
   handleKeyPress = e => {
     if (e.key === "Enter" && this.state.highlighted) {
-      this.props.history.push(`/${this.props.committee}/delegations/${this.state.highlighted}`);
+      this.props.history.push(
+        `/${this.props.committee}/delegations/${this.state.highlighted}`
+      );
     }
   };
 
@@ -88,26 +90,29 @@ class DelegationList extends React.Component {
               from={{ time: 0 }}
               to={{ time: 1 }}
             >
-              {props => this.state.delegations.map((name, i) => (
-                <animated.div
-                  style={{
-                    transform: props.time
-                      .interpolate(time => `translateY(${(50 + 25*i)*(1 - time)}px)`),
-                    opacity: props.time
-                  }}
-                >
-                  <SequenceButton
-                    href={`/${this.props.committee}/delegations/${name}`}
-                    showTimesSpoken={true}
-                    highlighted={i === 0 && this.state.highlighted != null}
-                    timesSpoken={this.state.timesSpoken[name]}
-                    ref={this[name]}
-                    key={i}
+              {props =>
+                this.state.delegations.map((name, i) => (
+                  <animated.div
+                    style={{
+                      transform: props.time.interpolate(
+                        time => `translateY(${(50 + 25 * i) * (1 - time)}px)`
+                      ),
+                      opacity: props.time
+                    }}
                   >
-                    {name}
-                  </SequenceButton>
-                </animated.div>
-              ))}
+                    <SequenceButton
+                      href={`/${this.props.committee}/delegations/${name}`}
+                      showTimesSpoken={true}
+                      highlighted={i === 0 && this.state.highlighted != null}
+                      timesSpoken={this.state.timesSpoken[name]}
+                      ref={this[name]}
+                      key={i}
+                    >
+                      {name}
+                    </SequenceButton>
+                  </animated.div>
+                ))
+              }
             </Spring>
           )}
         </div>

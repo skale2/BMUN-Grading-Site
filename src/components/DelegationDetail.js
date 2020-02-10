@@ -139,7 +139,7 @@ class DelegationDetail extends React.Component {
                     okText="Yes"
                     cancelText="No"
                   >
-                    <Button icon="delete" shape="circle" type="danger"/>
+                    <Button icon="delete" shape="circle" type="danger" />
                   </Popconfirm>
                 </Col>
               </Row>
@@ -153,7 +153,7 @@ class DelegationDetail extends React.Component {
         {comment.tags.length > 0 ? (
           <div style={{ marginTop: "2em" }}>
             {comment.tags.map((tag, j) => (
-              <Tag key={j}> {tag} </Tag>
+              <Tag style={{ margin: "5px 5px 5px 0px" }} key={j}> {tag} </Tag>
             ))}
           </div>
         ) : null}

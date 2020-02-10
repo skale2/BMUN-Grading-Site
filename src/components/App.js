@@ -39,12 +39,7 @@ class App extends React.Component {
       <div>
         <BrowserRouter>
           <Switch>
-            <Route
-              path="/welcome"
-              render={() =>
-                <Welcome />
-              }
-            />
+            <Route path="/welcome" render={() => <Welcome />} />
             <Route
               path="/:committee/grade/:delegation"
               render={({
@@ -151,13 +146,7 @@ class App extends React.Component {
                 );
               }}
             />
-            <Route
-              exact
-              path="/"
-              render={() =>
-               	<Redirect to="/welcome" />
-              }
-            />
+            <Route exact path="/" render={() => <Redirect to="/welcome" />} />
             <Route
               path="/"
               render={() => (
