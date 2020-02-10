@@ -1,5 +1,6 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
+import ScrollableAnchor from "react-scrollable-anchor";
 import {
   Button,
   Row,
@@ -13,7 +14,6 @@ import {
   Popconfirm,
   message
 } from "antd";
-import { Link } from "react-router-dom";
 import {
   SPEAKERS_LIST,
   MODERATED,
@@ -108,68 +108,75 @@ class DelegationDetail extends React.Component {
   };
 
   commentRender = (comment, i) => (
-    <div style={{ padding: "1em 1em 1em 1em" }} key={i}>
-      <Card
-        title={
-          <Row type="flex" align="middle" justify="space-between">
-            <Col span={8}>
-              <Statistic
-                title={comment.type}
-                value={comment.score}
-                suffix="/10"
-              />
-            </Col>
-            <Col span={5}>
-              <Row type="flex" align="middle" justify="space-between">
-                <Col style={{ fontSize: "20px", fontWeight: "600" }}>
-                  <Link
-                    to={{
-                      pathname: `/${this.props.committee}/grade/${this.props.delegation}`,
-                      state: { edit: comment }
-                    }}
-                  >
-                    <Button icon="edit" shape="circle" />
-                  </Link>
-                </Col>
-                <Col style={{ fontSize: "20px", fontWeight: "600" }}>
-                  <Popconfirm
-                    title="Are you sure you want to delete this comment?"
-                    onConfirm={() => this.deleteComment(comment.row)}
-                    onCancel={() => null}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <Button icon="delete" shape="circle" type="danger" />
-                  </Popconfirm>
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        }
-      >
-        <div style={{ color: comment.text.length > 0 ? "#363636" : "#a5a5a5" }}>
-          {comment.text.length > 0 ? comment.text : "No comment"}
-        </div>
-        {comment.tags.length > 0 ? (
-          <div style={{ marginTop: "2em" }}>
-            {comment.tags.map((tag, j) => (
-              <Tag style={{ margin: "5px 5px 5px 0px" }} key={j}> {tag} </Tag>
-            ))}
-          </div>
-        ) : null}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            color: "#a5a5a5",
-            fontStyle: "italic",
-            marginTop: "1em"
-          }}
+    <ScrollableAnchor id={comment.date.getTime()}>
+      <div style={{ padding: "1em 1em 1em 1em" }} key={i}>
+        <Card
+          title={
+            <Row type="flex" align="middle" justify="space-between">
+              <Col span={8}>
+                <Statistic
+                  title={comment.type}
+                  value={comment.score}
+                  suffix="/10"
+                />
+              </Col>
+              <Col span={5}>
+                <Row type="flex" align="middle" justify="space-between">
+                  <Col style={{ fontSize: "20px", fontWeight: "600" }}>
+                    <Link
+                      to={{
+                        pathname: `/${this.props.committee}/grade/${this.props.delegation}`,
+                        state: { edit: comment }
+                      }}
+                    >
+                      <Button icon="edit" shape="circle" />
+                    </Link>
+                  </Col>
+                  <Col style={{ fontSize: "20px", fontWeight: "600" }}>
+                    <Popconfirm
+                      title="Are you sure you want to delete this comment?"
+                      onConfirm={() => this.deleteComment(comment.row)}
+                      onCancel={() => null}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button icon="delete" shape="circle" type="danger" />
+                    </Popconfirm>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          }
         >
-          {comment.date.toLocaleDateString("en-US")}
-        </div>
-      </Card>
-    </div>
+          <div
+            style={{ color: comment.text.length > 0 ? "#363636" : "#a5a5a5" }}
+          >
+            {comment.text.length > 0 ? comment.text : "No comment"}
+          </div>
+          {comment.tags.length > 0 ? (
+            <div style={{ marginTop: "2em" }}>
+              {comment.tags.map((tag, j) => (
+                <Tag style={{ margin: "5px 5px 5px 0px" }} key={j}>
+                  {" "}
+                  {tag}{" "}
+                </Tag>
+              ))}
+            </div>
+          ) : null}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              color: "#a5a5a5",
+              fontStyle: "italic",
+              marginTop: "1em"
+            }}
+          >
+            {comment.date.toLocaleDateString("en-US")}
+          </div>
+        </Card>
+      </div>
+    </ScrollableAnchor>
   );
 
   render() {
