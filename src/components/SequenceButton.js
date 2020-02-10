@@ -14,7 +14,7 @@ class SequenceButton extends React.Component {
               margin: "0.4em auto",
               padding: "0em 2em",
               fontSize: "large",
-              transition: "box-shadow 0.1s ease",
+              transition: "all 0.3s ease",
               boxShadow: this.props.highlighted
                 ? "0px 0px 20px 3px rgba(24,144,255,0.40)"
                 : null
