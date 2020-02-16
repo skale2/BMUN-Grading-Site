@@ -100,7 +100,25 @@ const FORMAL = "Formal";
 const COMMENT = "Comment";
 const CRISIS = "Crisis";
 
-const Types = [SPEAKERS_LIST, MODERATED, UNMODERATED, FORMAL, COMMENT, CRISIS];
+const SPEECH_TYPES = [
+  SPEAKERS_LIST,
+  MODERATED,
+  UNMODERATED,
+  FORMAL,
+  COMMENT,
+  CRISIS
+];
+
+const SORTS = {
+  a_z: "A-Z",
+  z_a: "Z-A",
+  spoken_most: "Spoken most",
+  spoken_least: "Spoken least",
+  latest_first: "Latest first",
+  earliest_first: "Earliest first",
+  highest_score: "Highest score",
+  lowest_score: "Lowest score"
+};
 
 export {
   COMMITTEES,
@@ -114,5 +132,6 @@ export {
   DELEGATIONS,
   TAGS,
   ROWIdx,
-  Types
+  SPEECH_TYPES,
+  SORTS
 };

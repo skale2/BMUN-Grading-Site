@@ -20,38 +20,31 @@ class SequenceButton extends React.Component {
                 : null
             }}
           >
-            <div
-              style={{
-                float: "left",
-                top: "33%",
-                position: "absolute",
-                fontWeight: "600"
-              }}
-            >
-              {this.props.children}
-            </div>
-            <div style={{ float: "right" }}>
-              <Row type="flex" gutter={20}>
-                {this.props.highlighted ? (
-                  <Col>
-                    <Icon type="enter" style={{ marginRight: "5px" }} />
-                    <div style={{ fontSize: "12px", fontWeight: 700 }}>
-                      ENTER
-                    </div>
-                  </Col>
-                ) : null}
-                {this.props.showTimesSpoken ? (
-                  <Col style={{ paddingTop: 2 }}>
-                    <div style={{ fontSize: "16px", fontWeight: 400 }}>
-                      {this.props.timesSpoken}
-                    </div>
-                    <div style={{ fontSize: "12px", fontWeight: 700 }}>
-                      speeches
-                    </div>
-                  </Col>
-                ) : null}
-              </Row>
-            </div>
+            <Row type="flex" justify="space-between" align="middle">
+              <Col style={{ fontWeight: "600" }}>{this.props.children}</Col>
+              <Col>
+                <Row type="flex" gutter={20} justify="end">
+                  {this.props.highlighted ? (
+                    <Col>
+                      <Icon type="enter" style={{ marginRight: "5px" }} />
+                      <div style={{ fontSize: "12px", fontWeight: 700 }}>
+                        ENTER
+                      </div>
+                    </Col>
+                  ) : null}
+                  {this.props.timesSpoken !== undefined ? (
+                    <Col style={{ paddingTop: 2 }}>
+                      <div style={{ fontSize: "16px", fontWeight: 400 }}>
+                        {this.props.timesSpoken}
+                      </div>
+                      <div style={{ fontSize: "12px", fontWeight: 700 }}>
+                        speeches
+                      </div>
+                    </Col>
+                  ) : null}
+                </Row>
+              </Col>
+            </Row>
           </Button>
         </Link>
       </Row>

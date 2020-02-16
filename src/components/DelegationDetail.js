@@ -12,6 +12,7 @@ import {
   Empty,
   Spin,
   Popconfirm,
+  Select,
   message
 } from "antd";
 import {
@@ -20,10 +21,14 @@ import {
   UNMODERATED,
   FORMAL,
   COMMENT,
-  CRISIS
+  SPEECH_TYPES,
+  CRISIS,
+  SORTS
 } from "../constants";
 
 import backend from "../backend";
+
+const { Option } = Select;
 
 class DelegationDetail extends React.Component {
   constructor(props) {
@@ -42,11 +47,15 @@ class DelegationDetail extends React.Component {
       },
       tags: {},
       comments: [],
+      displayedComments: [],
+      filterCommentsBy: undefined,
+      sortCommentsBy: SORTS.latest_first,
       deletingComment: undefined
     };
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     backend
       .status(this.props.committee, this.props.delegation)
       .then(this.setDelegationInfo);
@@ -88,14 +97,17 @@ class DelegationDetail extends React.Component {
       score = Math.round((score + Number.EPSILON) * 10) / 10;
     }
 
-    this.setState({
-      loading: false,
-      score: score,
-      timesSpoken: timesSpoken,
-      spoken: spoken,
-      tags: tags,
-      comments: responses
-    });
+    this.setState(
+      {
+        loading: false,
+        score: score,
+        timesSpoken: timesSpoken,
+        spoken: spoken,
+        tags: tags,
+        comments: responses
+      },
+      this.filter
+    );
   };
 
   deleteComment = row => {
@@ -107,8 +119,49 @@ class DelegationDetail extends React.Component {
     message.success(`Comment deleted`);
   };
 
+  filter = () => {
+    let displayedComments = this.state.comments.slice();
+
+    if (this.state.filterCommentsBy !== undefined)
+      displayedComments = displayedComments.filter(
+        comment => comment.type === this.state.filterCommentsBy
+      );
+
+    this.setState(
+      {
+        displayedComments: displayedComments
+      },
+      this.sort
+    );
+  };
+
+  sort = () => {
+    let by = this.state.sortCommentsBy;
+    let displayedComments = this.state.displayedComments.slice();
+
+    switch (by) {
+      case SORTS.latest_first:
+        displayedComments.sort((com1, com2) => com2.date - com1.date);
+        break;
+      case SORTS.earliest_first:
+        displayedComments.sort((com1, com2) => com1.date - com2.date);
+        break;
+      case SORTS.highest_score:
+        displayedComments.sort((com1, com2) => com2.score - com1.score);
+        break;
+      case SORTS.lowest_score:
+        displayedComments.sort((com1, com2) => com1.score - com2.score);
+        break;
+      default:
+    }
+
+    this.setState({
+      displayedComments: displayedComments
+    });
+  };
+
   commentRender = (comment, i) => (
-    <ScrollableAnchor id={comment.date.getTime()}>
+    <ScrollableAnchor id={comment.date.getTime()} key={i}>
       <div style={{ padding: "1em 1em 1em 1em" }} key={i}>
         <Card
           title={
@@ -282,23 +335,69 @@ class DelegationDetail extends React.Component {
           </Col>
         </Row>
         <Row
+          type="flex"
+          align="middle"
+          justify="space-between"
           span={12}
           style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
         >
-          Comments
+          <Col>Comments</Col>
+          <Col>
+            <Row type="flex" gutter={10}>
+              <Col>
+                <Select
+                  style={{ width: "10em" }}
+                  placeholder="Type"
+                  onChange={type =>
+                    this.setState({ filterCommentsBy: type }, this.filter)
+                  }
+                  allowClear
+                >
+                  {SPEECH_TYPES.map((type, i) => (
+                    <Option key={i} value={type}>
+                      {type}
+                    </Option>
+                  ))}
+                </Select>
+              </Col>
+              <Col>
+                <Select
+                  defaultValue={this.state.sortCommentsBy}
+                  style={{ width: "10em" }}
+                  placeholder="Sort"
+                  onChange={by =>
+                    this.setState({ sortCommentsBy: by }, this.sort)
+                  }
+                >
+                  <Option value={SORTS.latest_first}>
+                    {SORTS.latest_first}
+                  </Option>
+                  <Option value={SORTS.earliest_first}>
+                    {SORTS.earliest_first}
+                  </Option>
+                  <Option value={SORTS.highest_score}>
+                    {SORTS.highest_score}
+                  </Option>
+                  <Option value={SORTS.lowest_score}>
+                    {SORTS.lowest_score}
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
+          </Col>
         </Row>
         <Row style={{ marginTop: "2em" }}>
-          {this.state.comments.length === 0 ? (
-            <Empty description="No comments yet!" />
+          {this.state.displayedComments.length === 0 ? (
+            <Empty description="No comments yet! Did you try a different set of filters?" />
           ) : (
             <div>
               <Col span={12}>
-                {this.state.comments
+                {this.state.displayedComments
                   .filter((_, i) => i % 2 === 0)
                   .map((comment, i) => this.commentRender(comment, i))}
               </Col>
               <Col span={12}>
-                {this.state.comments
+                {this.state.displayedComments
                   .filter((_, i) => i % 2 === 1)
                   .map((comment, i) => this.commentRender(comment, i))}
               </Col>

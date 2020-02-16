@@ -1,4 +1,4 @@
-import { Types } from "./constants";
+import { SPEECH_TYPES } from "./constants";
 
 const SPREADSHEET_ID = "1eczM3E4dLINpE4SUd8XORhm7XD_JgrnDbuT0_DDuG5A";
 const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
@@ -15,7 +15,7 @@ function rowToObject(row, i) {
     row: i,
     date: new Date(parseInt(row[0])),
     delegation: row[1],
-    type: Types[parseInt(row[2])],
+    type: SPEECH_TYPES[parseInt(row[2])],
     score: parseInt(row[3]),
     tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
     text: row[5] !== undefined ? row[5] : ""

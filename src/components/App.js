@@ -11,14 +11,17 @@ import DelegationDetail from "./DelegationDetail";
 
 import { Spin } from "antd";
 import Welcome from "./Welcome";
-import { COMMITTEES } from "../constants";
+import { COMMITTEES, SORTS } from "../constants";
 
 import backend from "../backend";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { backendIsReady: false };
+    this.state = {
+      backendIsReady: false,
+      sortDelegationsBy: SORTS.a_z
+    };
     backend.isReadyCallbacks.push(this.backendReady);
   }
 
@@ -88,7 +91,13 @@ class App extends React.Component {
 
                 return (
                   <Base page="grade" committee={committee}>
-                    <GradeList committee={committee} />
+                    <GradeList
+                      committee={committee}
+                      sortDelegationsBy={this.state.sortDelegationsBy}
+                      changeSortDelegationsBy={by =>
+                        this.setState({ sortDelegationsBy: by })
+                      }
+                    />
                   </Base>
                 );
               }}
@@ -141,7 +150,13 @@ class App extends React.Component {
 
                 return (
                   <Base page="delegations" committee={committee}>
-                    <DelegationList committee={committee} />
+                    <DelegationList
+                      committee={committee}
+                      sortDelegationsBy={this.state.sortDelegationsBy}
+                      changeSortDelegationsBy={by =>
+                        this.setState({ sortDelegationsBy: by })
+                      }
+                    />
                   </Base>
                 );
               }}

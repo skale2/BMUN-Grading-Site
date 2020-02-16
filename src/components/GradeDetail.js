@@ -22,7 +22,7 @@ import {
 import ScrollableAnchor from "react-scrollable-anchor";
 import { goToAnchor, configureAnchors } from "react-scrollable-anchor";
 
-import { TAGS, Types } from "../constants";
+import { TAGS, SPEECH_TYPES } from "../constants";
 import backend from "../backend";
 
 const { TextArea } = Input;
@@ -37,7 +37,7 @@ class GradeDetail extends React.Component {
       this.state = {
         editingRow: row,
         focus: 0,
-        type: Types.indexOf(type),
+        type: SPEECH_TYPES.indexOf(type),
         score: score,
         tags: new Set(tags),
         comments: text
@@ -64,7 +64,7 @@ class GradeDetail extends React.Component {
   }
 
   componentDidMount() {
-    goToAnchor("base");
+    window.scrollTo(0, 0)
   }
 
   componentWillUnmount() {

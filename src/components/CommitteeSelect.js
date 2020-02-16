@@ -51,7 +51,6 @@ class CommitteeSelect extends React.Component {
             this.state.committees.map((name, i) => (
               <SequenceButton
                 href={`/${COMMITTEES_REVERSE[name]}/grade`}
-                showTimesSpoken={false}
                 highlighted={i === 0 && this.state.highlighted != null}
                 type="grade"
                 ref={this[name]}

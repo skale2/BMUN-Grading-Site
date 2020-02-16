@@ -1,7 +1,8 @@
 import React from "react";
-import { Input, Affix } from "antd";
+import { Input, Select, Affix, Row, Col } from "antd";
 
 const Search = Input.Search;
+const Option = Select.Option;
 
 /**
  * A search bar component that takes in a list of possible queries
@@ -33,7 +34,8 @@ class SearchBar extends React.Component {
       query: "",
       node: this.trie.head,
       darken: 0,
-      offPath: 0
+      offPath: 0,
+      sorts: props.sorts
     };
   }
 
@@ -46,21 +48,21 @@ class SearchBar extends React.Component {
     window.removeEventListener("scroll", this.handleScroll);
   };
 
-  handleScroll = _ => {
+  handleScroll = () => {
     let scrollTop = window.scrollY;
     this.setState({ darken: Math.min(1, scrollTop / 300) });
   };
 
   updateResults = event => {
     let node = this.state.node;
-    let value = event.target.value.trim();
+    let query = event.target.value.trim();
     let offPath = this.state.offPath;
 
     // If the user deleted some characters from their query
-    if (value.length < this.state.query.length) {
+    if (query.length < this.state.query.length) {
       for (
         let i = 0;
-        i < this.state.query.length - value.length && node != null;
+        i < this.state.query.length - query.length && node != null;
         i++
       ) {
         if (offPath > 0) offPath--;
@@ -76,8 +78,8 @@ class SearchBar extends React.Component {
       if (!offPath) {
         let ch;
         let newNode;
-        for (; i < value.length; i++) {
-          ch = value.charAt(i).toLowerCase();
+        for (; i < query.length; i++) {
+          ch = query.charAt(i).toLowerCase();
           newNode = node.children[ch];
 
           if (newNode == null) break;
@@ -87,40 +89,84 @@ class SearchBar extends React.Component {
 
       // If the user added more characters that takes us
       // off the trie
-      offPath = offPath + value.length - i;
+      offPath = offPath + query.length - i;
     }
 
-    console.log(node);
+    // Update where we are now and update our listener.
+    this.setState(
+      {
+        node: node,
+        query: query,
+        offPath: offPath
+      },
+      () =>
+        this.dispatchUpdate(
+          !this.state.offPath ? this.state.node.queries : [],
+          query.length === 0
+        )
+    );
+  };
 
-    // Update where we are now
-    this.setState({
-      node: node,
-      query: value,
-      offPath: offPath
-    });
+  sort = value => {
+    if (this.props.sorts === undefined) return;
 
-    // Tell whoever is listening to update their list of possible queries
-    this.dispatchUpdate(!offPath ? node.queries : [], value.length === 0);
+    let queries = this.state.node.queries.sort(this.props.getSort(value));
+
+    this.dispatchUpdate(
+      !this.state.offPath ? queries : [],
+      this.state.query.length === 0
+    );
   };
 
   render() {
     return (
       <Affix offsetTop={25}>
-        <Search
-          size="large"
-          placeholder={this.placeHolder}
-          onChange={this.updateResults}
-          style={{
-            height: "4em",
-            marginBottom: "3em",
-            borderRadius: "5px",
-            boxShadow:
-              "0px 0px 90px 30px rgba(170, 170, 170, " + this.state.darken + ")"
-          }}
-          ref={search => {
-            this.searchRef = search;
-          }}
-        />
+        <Row type="flex" gutter={[20, 0]}>
+          <Col span={this.props.sorts !== undefined ? 19 : 24}>
+            <Search
+              placeholder={this.placeHolder}
+              onChange={this.updateResults}
+              style={{
+                size: "large",
+                height: 40,
+                marginBottom: "4em",
+                borderRadius: "5px",
+                boxShadow:
+                  "0px 0px 100px 20px rgba(170, 170, 170, " +
+                  this.state.darken +
+                  ")"
+              }}
+              ref={search => {
+                this.searchRef = search;
+              }}
+            />
+          </Col>
+          {this.props.sorts !== undefined ? (
+            <Col span={5}>
+              <Select
+                size="large"
+                style={{
+                  width: 150,
+                  fontWeight: 600,
+                  fontSize: 14,
+                  borderRadius: "5px",
+                  boxShadow:
+                    "0px 0px 100px 20px rgba(170, 170, 170, " +
+                    this.state.darken +
+                    ")"
+                }}
+                defaultValue={this.props.defaultSort}
+                onChange={this.sort}
+              >
+                {this.props.sorts.map((sort, i) => (
+                  <Option key={i} value={sort}>
+                    {sort}
+                  </Option>
+                ))}
+              </Select>
+            </Col>
+          ) : null}
+        </Row>
       </Affix>
     );
   }
