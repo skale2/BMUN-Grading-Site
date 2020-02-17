@@ -8,6 +8,7 @@ import GradeList from "./GradeList";
 import GradeDetail from "./GradeDetail";
 import DelegationList from "./DelegationList";
 import DelegationDetail from "./DelegationDetail";
+import Export from "./Export";
 
 import { Spin } from "antd";
 import Welcome from "./Welcome";
@@ -170,6 +171,33 @@ class App extends React.Component {
                         this.setState({ sortDelegationsBy: by })
                       }
                     />
+                  </Base>
+                );
+              }}
+            />
+            <Route
+              path="/:committee/export"
+              render={({
+                match: {
+                  params: { committee }
+                },
+                location: { pathname }
+              }) => {
+                if (!backend.isReady)
+                  return (
+                    <Redirect
+                      to={{ pathname: "/welcome", state: { from: pathname } }}
+                    />
+                  );
+
+                if (!Object.keys(COMMITTEES).includes(committee))
+                  return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
+
+                return (
+                  <Base page="export" committee={committee}>
+                    <Export committee={committee} />
                   </Base>
                 );
               }}

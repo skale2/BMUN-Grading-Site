@@ -56,9 +56,7 @@ class DelegationDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    backend
-      .status(this.props.delegation)
-      .then(this.setDelegationInfo);
+    backend.status(this.props.delegation).then(this.setDelegationInfo);
   }
 
   setDelegationInfo = responses => {

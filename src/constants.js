@@ -1,59 +1,10 @@
-const DELEGATIONS = {
-  jcc_new_deal: [
-    "Adolf A. Berle",
-    "Basil O' Connor",
-    "Benjamin V. Cohen",
-    "F. Palmer Weber",
-    "Felix Frankfurter",
-    "Frances Perkins",
-    "George Peek",
-    "Harold Ickes",
-    "Harry Hopkins",
-    "Henry Morgenthau Jr.",
-    "Henry Thomas Rainey",
-    "Huey Long",
-    "Hugh S. Johnson",
-    "Jim Farley",
-    "Joe T. Robinson",
-    "Louis Brandeis",
-    "Louis McHenry Howe",
-    "Marriner Eccles",
-    "Paul M. O'Leary",
-    "Raymond Moley",
-    "Rexford Tugwell",
-    "Robert C. Weaver",
-    "Robert F. Wagner",
-    "Thomas Gardiner Corcoran",
-    "William Bankhead"
-  ],
-  jcc_old_guard: [
-    "Al Smith",
-    "Alfred P. Sloan",
-    "Andrew Mellon",
-    "Bertrand Snell",
-    "Dean Acheson",
-    "Eugene Meyer",
-    "Frank Knox",
-    "Frederick Steiwer",
-    "Harry F. Byrd",
-    "Irénée du Pont",
-    "James Wolcott Wadsworth Jr.",
-    "John Davis",
-    "John Howard Pew",
-    "Jouett Shouse",
-    "Lester Dickinson",
-    "Lewis Douglas",
-    "Milton Friedman",
-    "Nathan L. Miller",
-    "Odgen Mills",
-    "Pierre du Pont",
-    "Robert A. Taft",
-    "Robert Luce",
-    "Rush Holt Sr.",
-    "Wendell Willkie",
-    "William Randolph Hearst"
-  ]
-};
+import {
+  API_KEY,
+  CLIENT_ID,
+  COMMITTEES,
+  COMMITTEE_BACKENDS,
+  DELEGATIONS
+} from "./config";
 
 const TAGS = [
   "Great Points",
@@ -74,20 +25,10 @@ const TAGS = [
   "Makes Connections"
 ];
 
-const COMMITTEES = {
-  jcc_new_deal: "JCC New Deal",
-  jcc_old_guard: "JCC Old Guard"
-};
-
 const COMMITTEES_REVERSE = {};
 for (const committee in COMMITTEES) {
   COMMITTEES_REVERSE[COMMITTEES[committee]] = committee;
 }
-
-const COMMITTEE_BACKENDS = {
-  jcc_new_deal: "1Hfuo9tQeTD_u-QUD55MvTdhm-xYO-0LzTsXy_B1mR84",
-  jcc_old_guard: "1aBD4NR8n8WkA_p_lIG023pAFjNjD5zXn84cj6XBXHcI"
-};
 
 const SPEAKERS_LIST = "Speaker's List";
 const MODERATED = "Moderated";
@@ -117,6 +58,8 @@ const SORTS = {
 };
 
 export {
+  API_KEY,
+  CLIENT_ID,
   COMMITTEES,
   COMMITTEES_REVERSE,
   COMMITTEE_BACKENDS,

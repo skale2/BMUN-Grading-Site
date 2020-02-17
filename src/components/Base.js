@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Layout, Menu, Icon, Row, Col } from "antd";
+import { Layout, Menu, Icon, Row, Col, Tooltip } from "antd";
 import { Link } from "react-router-dom";
 
 import { COMMITTEES } from "../constants";
@@ -10,11 +10,14 @@ const { Content } = Layout;
 const Base = props => {
   return (
     <Layout style={{ margin: "2% 7%", background: "white" }}>
-      <Row style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}>
+      <Row
+        type="flex"
+        style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}
+      >
         <Link to="/welcome">
-          <span title="Select another committee">
+          <Tooltip placement="bottom" title="← Select another committee">
             {COMMITTEES[props.committee].toUpperCase()}
-          </span>
+          </Tooltip>
         </Link>
       </Row>
       <Row
@@ -31,7 +34,7 @@ const Base = props => {
         >
           {props.page.charAt(0).toUpperCase() + props.page.slice(1)}
         </Col>
-        <Col span={7}>
+        <Col>
           <Menu mode="horizontal" selectedKeys={[props.page]}>
             <Menu.Item key="grade">
               <Link to={`/${props.committee}/grade`}>
@@ -43,6 +46,12 @@ const Base = props => {
               <Link to={`/${props.committee}/delegations`}>
                 <Icon type="user" />
                 Delegations
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="export">
+              <Link to={`/${props.committee}/export`}>
+                <Icon type="export" />
+                Export
               </Link>
             </Menu.Item>
           </Menu>
