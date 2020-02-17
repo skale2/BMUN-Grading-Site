@@ -50,7 +50,7 @@ class SearchBar extends React.Component {
 
   handleScroll = () => {
     let scrollTop = window.scrollY;
-    this.setState({ darken: Math.min(1, scrollTop / 300) });
+    this.setState({ darken: Math.min(0.8, scrollTop / 300) });
   };
 
   updateResults = event => {
@@ -129,7 +129,7 @@ class SearchBar extends React.Component {
               style={{
                 size: "large",
                 height: 40,
-                marginBottom: "4em",
+                marginBottom: "3em",
                 borderRadius: "5px",
                 boxShadow:
                   "0px 0px 100px 20px rgba(170, 170, 170, " +
