@@ -89,15 +89,6 @@ const COMMITTEE_BACKENDS = {
   jcc_old_guard: "1aBD4NR8n8WkA_p_lIG023pAFjNjD5zXn84cj6XBXHcI"
 };
 
-const ROWIdx = {
-  datetime: 0,
-  delegation: 1,
-  type: 2,
-  score: 3,
-  tags: 4,
-  comments: 5
-};
-
 const SPEAKERS_LIST = "Speaker's List";
 const MODERATED = "Moderated";
 const UNMODERATED = "Unmoderated";
@@ -137,7 +128,6 @@ export {
   CRISIS,
   DELEGATIONS,
   TAGS,
-  ROWIdx,
   SPEECH_TYPES,
   SORTS
 };
