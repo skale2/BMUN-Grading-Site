@@ -40,6 +40,7 @@ class GradeDetail extends React.Component {
         type: SPEECH_TYPES.indexOf(type),
         score: score,
         tags: new Set(tags),
+        focusingOnComments: false,
         comments: text
       };
     } else {
@@ -49,6 +50,7 @@ class GradeDetail extends React.Component {
         type: -1,
         score: -1,
         tags: new Set(),
+        focusingOnComments: false,
         comments: ""
       };
     }
@@ -64,7 +66,7 @@ class GradeDetail extends React.Component {
   }
 
   componentDidMount() {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {
@@ -108,16 +110,19 @@ class GradeDetail extends React.Component {
     if (
       e.key === "Enter" &&
       e.shiftKey &&
-      !(this.state.type < 0 || this.state.score < 0)
+      this.state.type >= 0 &&
+      this.state.score >= 0
     ) {
       this.handleSubmit();
     }
 
     if (this.state.focus === 0) {
-      if (!(parseInt(e.key) in [1, 2, 3, 4, 5, 6])) return;
+      let key = parseInt(e.key);
+
+      if (![1, 2, 3, 4, 5, 6].includes(key)) return;
 
       this.setState({
-        type: parseInt(e.key) - 1,
+        type: key - 1,
         focus: 1
       });
 
@@ -125,7 +130,7 @@ class GradeDetail extends React.Component {
     } else if (this.state.focus === 1) {
       let key = parseInt(e.key);
 
-      if (!(key in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0])) return;
+      if (![1, 2, 3, 4, 5, 6, 7, 8, 9, 0].includes(key)) return;
 
       if (key === 0) {
         key = 10;
@@ -137,6 +142,9 @@ class GradeDetail extends React.Component {
       });
 
       goToAnchor("tags");
+      this.setState({ focusingOnComments: true }, () =>
+        this.commentsRef.focus()
+      );
     }
   };
 
@@ -155,6 +163,7 @@ class GradeDetail extends React.Component {
     });
 
     goToAnchor("tags");
+    this.commentsRef.focus();
   };
 
   handleTagSelect = tag => {
@@ -168,7 +177,10 @@ class GradeDetail extends React.Component {
   };
 
   handleAddComment = e => {
-    this.setState({ comments: e.target.value });
+    if (this.state.focusingOnComments)
+      this.setState({ focusingOnComments: false });
+    else if (!(e.key === "Enter" && e.shiftKey))
+      this.setState({ comments: e.target.value });
   };
 
   render() {
@@ -332,8 +344,9 @@ class GradeDetail extends React.Component {
               <Col span={2} />
               <Col span={18}>
                 <TextArea
+                  allowClear
                   rows={8}
-                  defaultValue={this.state.comments}
+                  value={this.state.comments}
                   onChange={this.handleAddComment}
                   ref={comments => {
                     this.commentsRef = comments;

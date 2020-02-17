@@ -52,14 +52,9 @@ class Welcome extends React.Component {
             }}
           >
             <Row type="flex" justify="center">
-              <Col span={10} />
-              <Col span={3}> Hello </Col>
-              <Col span={1}>
-                <span style={{ color: "black" }} role="img" aria-label="UN">
-                  🇺🇳
-                </span>
-              </Col>
-              <Col span={10} />
+              <span role="img" aria-label="UN">
+                Hello 🇺🇳
+              </span>
             </Row>
             {props.time < 0.6 ? (
               <div
@@ -83,12 +78,8 @@ class Welcome extends React.Component {
             ) : null}
             {props.time > 0.5 ? (
               <div style={{ opacity: props.time }}>
-                <Row justify="center">
-                  <Col span={7} />
-                  <Col span={10}>
-                    <CommitteeSelect gotoCommittee={this.gotoCommittee} />
-                  </Col>
-                  <Col span={7} />
+                <Row type="flex" justify="center">
+                  <CommitteeSelect gotoCommittee={this.gotoCommittee} />
                 </Row>
               </div>
             ) : null}

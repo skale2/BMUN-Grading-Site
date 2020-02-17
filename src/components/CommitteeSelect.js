@@ -35,6 +35,7 @@ class CommitteeSelect extends React.Component {
     return (
       <div onKeyPress={this.handleKeyPress}>
         <SearchBar
+          style={{width: 600}}
           values={Object.values(COMMITTEES)}
           dispatchUpdate={this.dispatchUpdate}
           placeHolder="What committee are you on?"
@@ -42,7 +43,7 @@ class CommitteeSelect extends React.Component {
         <div
           style={{
             margin: "0 auto",
-            width: "80%"
+            width: "80%",
           }}
         >
           {!this.state.committees.length ? (
@@ -51,7 +52,7 @@ class CommitteeSelect extends React.Component {
             this.state.committees.map((name, i) => (
               <SequenceButton
                 href={`/${COMMITTEES_REVERSE[name]}/grade`}
-                highlighted={i === 0 && this.state.highlighted != null}
+                highlighted={i === 0 && this.state.highlighted !== null}
                 type="grade"
                 ref={this[name]}
                 key={i}

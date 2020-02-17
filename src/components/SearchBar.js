@@ -121,20 +121,25 @@ class SearchBar extends React.Component {
   render() {
     return (
       <Affix offsetTop={25}>
-        <Row type="flex" gutter={[20, 0]}>
+        <Row
+          type="flex"
+          gutter={[20, 0]}
+          align="middle"
+          style={{ marginBottom: 20 }}
+        >
           <Col span={this.props.sorts !== undefined ? 19 : 24}>
             <Search
               placeholder={this.placeHolder}
               onChange={this.updateResults}
               style={{
                 size: "large",
-                height: 40,
-                marginBottom: "3em",
+                height: 60,
                 borderRadius: "5px",
                 boxShadow:
                   "0px 0px 100px 20px rgba(170, 170, 170, " +
                   this.state.darken +
-                  ")"
+                  ")",
+                ...this.props.style
               }}
               ref={search => {
                 this.searchRef = search;
