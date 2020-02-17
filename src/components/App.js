@@ -20,7 +20,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       backendIsReady: false,
-      sortDelegationsBy: SORTS.a_z
+      sortDelegationsBy: SORTS.a_z,
+      sortCommentsBy: SORTS.latest_first
     };
     backend.isReadyCallbacks.push(this.backendReady);
   }
@@ -125,6 +126,10 @@ class App extends React.Component {
                     <DelegationDetail
                       committee={committee}
                       delegation={delegation}
+                      sortCommentsBy={this.state.sortCommentsBy}
+                      changeSortCommentsBy={by =>
+                        this.setState({ sortCommentsBy: by })
+                      }
                     />
                   </Base>
                 );

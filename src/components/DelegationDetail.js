@@ -49,7 +49,7 @@ class DelegationDetail extends React.Component {
       comments: [],
       displayedComments: [],
       filterCommentsBy: undefined,
-      sortCommentsBy: SORTS.latest_first,
+      sortCommentsBy: this.props.sortCommentsBy,
       deletingComment: undefined
     };
   }
@@ -362,12 +362,13 @@ class DelegationDetail extends React.Component {
               </Col>
               <Col>
                 <Select
-                  defaultValue={this.state.sortCommentsBy}
+                  defaultValue={this.props.sortCommentsBy}
                   style={{ width: "10em" }}
                   placeholder="Sort"
-                  onChange={by =>
-                    this.setState({ sortCommentsBy: by }, this.sort)
-                  }
+                  onChange={by => {
+                    this.setState({ sortCommentsBy: by }, this.sort);
+                    this.props.changeSortCommentsBy(by);
+                  }}
                 >
                   <Option value={SORTS.latest_first}>
                     {SORTS.latest_first}
