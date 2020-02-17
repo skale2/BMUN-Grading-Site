@@ -1,6 +1,5 @@
-import { SPEECH_TYPES } from "./constants";
+import { SPEECH_TYPES, COMMITTEES, COMMITTEE_BACKENDS } from "./constants";
 
-const SPREADSHEET_ID = "1eczM3E4dLINpE4SUd8XORhm7XD_JgrnDbuT0_DDuG5A";
 const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
 const CLIENT_ID =
   "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
@@ -28,6 +27,9 @@ class Backend {
     this.auth = null;
     this.user = null;
     this.isReadyCallbacks = [];
+    this.spreadsheetId = undefined;
+    this.committee = undefined;
+    this.delegations = undefined;
 
     window.gapi.load("client:auth2", this.initClient);
   }
@@ -59,15 +61,27 @@ class Backend {
     });
   };
 
-  comments = committee => {
+  setCommittee = committee => {
+    if (committee !== this.committee) {
+      if (!Object.keys(COMMITTEES).includes(committee))
+        console.error(`Unknown committee: ${committee}`);
+
+      this.committee = committee;
+      this.spreadsheetId = COMMITTEE_BACKENDS[committee];
+    }
+  };
+
+  comments = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
+    } else if (this.spreadsheetId === undefined) {
+      console.error("Committee not defined");
     }
 
     return window.gapi.client.sheets.spreadsheets.values
       .get({
-        spreadsheetId: SPREADSHEET_ID,
-        range: `${committee}!A:F`,
+        spreadsheetId: this.spreadsheetId,
+        range: `Sheet1!A:F`,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -78,7 +92,7 @@ class Backend {
       );
   };
 
-  grade = (committee, delegation, type, score, tags, text) => {
+  grade = (delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -86,15 +100,15 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .append(
         {
-          spreadsheetId: SPREADSHEET_ID,
+          spreadsheetId: this.spreadsheetId,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
-          range: `${committee}!A:F`
+          range: `Sheet1!A:F`
         },
         {
           majorDimension: "ROWS",
-          range: `${committee}!A:F`,
+          range: `Sheet1!A:F`,
           values: [
             [
               Date.now(),
@@ -113,7 +127,7 @@ class Backend {
       );
   };
 
-  edit = (committee, row, delegation, type, score, tags, text) => {
+  edit = (row, delegation, type, score, tags, text) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -123,14 +137,14 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .update(
         {
-          spreadsheetId: SPREADSHEET_ID,
+          spreadsheetId: this.spreadsheetId,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
-          range: `${committee}!A${row + 1}:F${row + 1}`
+          range: `Sheet1!A${row + 1}:F${row + 1}`
         },
         {
           majorDimension: "ROWS",
-          range: `${committee}!A${row + 1}:F${row + 1}`,
+          range: `Sheet1!A${row + 1}:F${row + 1}`,
           values: [
             [
               Date.now(),
@@ -149,15 +163,15 @@ class Backend {
       );
   };
 
-  status = (committee, delegation) => {
+  status = delegation => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
 
     return window.gapi.client.sheets.spreadsheets.values
       .get({
-        spreadsheetId: SPREADSHEET_ID,
-        range: `${committee}!A:F`,
+        spreadsheetId: this.spreadsheetId,
+        range: `Sheet1!A:F`,
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -171,13 +185,13 @@ class Backend {
       );
   };
 
-  deleteComment = (committee, row) => {
+  deleteComment = row => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
 
     return window.gapi.client.sheets.spreadsheets.batchUpdate(
-      { spreadsheetId: SPREADSHEET_ID },
+      { spreadsheetId: this.spreadsheetId },
       {
         requests: [
           {

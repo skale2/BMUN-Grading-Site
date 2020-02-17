@@ -33,7 +33,6 @@ class GradeDetail extends React.Component {
 
     if (props.location.state !== undefined) {
       let { row, type, score, tags, text } = props.location.state.edit;
-      console.log(text);
       this.state = {
         editingRow: row,
         focus: 0,
@@ -77,7 +76,6 @@ class GradeDetail extends React.Component {
     if (this.state.editingRow !== undefined) {
       backend
         .edit(
-          this.props.committee,
           this.state.editingRow,
           this.props.delegation,
           this.state.type,
@@ -92,7 +90,6 @@ class GradeDetail extends React.Component {
     } else {
       backend
         .grade(
-          this.props.committee,
           this.props.delegation,
           this.state.type,
           this.state.score,

@@ -25,9 +25,7 @@ class DelegationList extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.sortDelegationsBy);
-
-    backend.comments(this.props.committee).then(result => {
+    backend.comments().then(result => {
       let timesSpoken = {};
 
       for (const delegation of DELEGATIONS[this.props.committee]) {

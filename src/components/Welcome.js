@@ -33,6 +33,7 @@ class Welcome extends React.Component {
   };
 
   gotoCommittee = committee => {
+    backend.setCommittee(committee);
     this.props.history.push(`/${COMMITTEES_REVERSE[committee]}/grade`);
   };
 

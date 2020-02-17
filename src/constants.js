@@ -84,6 +84,11 @@ for (const committee in COMMITTEES) {
   COMMITTEES_REVERSE[COMMITTEES[committee]] = committee;
 }
 
+const COMMITTEE_BACKENDS = {
+  jcc_new_deal: "1Hfuo9tQeTD_u-QUD55MvTdhm-xYO-0LzTsXy_B1mR84",
+  jcc_old_guard: "1aBD4NR8n8WkA_p_lIG023pAFjNjD5zXn84cj6XBXHcI"
+};
+
 const ROWIdx = {
   datetime: 0,
   delegation: 1,
@@ -123,6 +128,7 @@ const SORTS = {
 export {
   COMMITTEES,
   COMMITTEES_REVERSE,
+  COMMITTEE_BACKENDS,
   SPEAKERS_LIST,
   MODERATED,
   UNMODERATED,

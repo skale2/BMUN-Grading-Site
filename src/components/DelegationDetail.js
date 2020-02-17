@@ -57,7 +57,7 @@ class DelegationDetail extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     backend
-      .status(this.props.committee, this.props.delegation)
+      .status(this.props.delegation)
       .then(this.setDelegationInfo);
   }
 
@@ -112,11 +112,11 @@ class DelegationDetail extends React.Component {
 
   deleteComment = row => {
     backend
-      .deleteComment(this.props.committee, row)
+      .deleteComment(row)
       .then(() => backend.status(this.props.delegation))
-      .then(this.setDelegationInfo);
-    this.setState({ deletingComment: undefined });
-    message.success(`Comment deleted`);
+      .then(this.setDelegationInfo)
+      .then(() => this.setState({ deletingComment: undefined }))
+      .then(() => message.success(`Comment deleted`));
   };
 
   filter = () => {

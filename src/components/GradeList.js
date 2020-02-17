@@ -25,7 +25,7 @@ class GradeList extends React.Component {
   }
 
   componentDidMount() {
-    backend.comments(this.props.committee).then(result => {
+    backend.comments().then(result => {
       let timesSpoken = {};
 
       for (const delegationName of DELEGATIONS[this.props.committee]) {

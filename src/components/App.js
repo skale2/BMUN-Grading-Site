@@ -62,6 +62,8 @@ class App extends React.Component {
                 if (!Object.keys(COMMITTEES).includes(committee))
                   return <Redirect to="/not_found" />;
 
+                backend.setCommittee(committee);
+
                 return (
                   <Base page="grade" committee={committee}>
                     <GradeDetail
@@ -89,6 +91,8 @@ class App extends React.Component {
 
                 if (!Object.keys(COMMITTEES).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="grade" committee={committee}>
@@ -121,6 +125,8 @@ class App extends React.Component {
                 if (!Object.keys(COMMITTEES).includes(committee))
                   return <Redirect to="/not_found" />;
 
+                backend.setCommittee(committee);
+
                 return (
                   <Base page="delegations" committee={committee}>
                     <DelegationDetail
@@ -152,6 +158,8 @@ class App extends React.Component {
 
                 if (!Object.keys(COMMITTEES).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="delegations" committee={committee}>
