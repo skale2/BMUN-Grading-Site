@@ -81,7 +81,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: this.spreadsheetId,
-        range: `Sheet1!A:F`,
+        range: "Sheet1!A:F",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
@@ -104,11 +104,11 @@ class Backend {
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
-          range: `Sheet1!A:F`
+          range: "Sheet1!A:F"
         },
         {
           majorDimension: "ROWS",
-          range: `Sheet1!A:F`,
+          range: "Sheet1!A:F",
           values: [
             [
               Date.now(),
@@ -171,7 +171,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: this.spreadsheetId,
-        range: `Sheet1!A:F`,
+        range: "Sheet1!A:F",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
