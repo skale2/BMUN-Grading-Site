@@ -34,7 +34,6 @@ import { tagStyle } from "../style";
 
 const { Option } = Select;
 
-
 class DelegationDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -205,7 +204,10 @@ class DelegationDetail extends React.Component {
           }
         >
           <div
-            style={{ wordWrap: 'break-word', color: comment.text.length > 0 ? "#363636" : "#a5a5a5" }}
+            style={{
+              wordWrap: "break-word",
+              color: comment.text.length > 0 ? "#363636" : "#a5a5a5"
+            }}
           >
             {comment.text.length > 0 ? comment.text : "No comment"}
           </div>
@@ -378,92 +380,99 @@ class DelegationDetail extends React.Component {
                 </Col>
               </Row>
             </animated.div>
-            <animated.div
-              style={{
-                transform: props.time.interpolate(
-                  time => `translateY(${150 * (1 - time)}px)`
-                ),
-                opacity: props.time
-              }}
-            >
-            <Row
-              style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
-            >
-              <Row style={{ marginBottom: "1em" }}>Tags</Row>
-              <Row>
-                {Object.entries(this.state.tags)
-                  .sort(
-                    ([, frequency1], [, frequency2]) => frequency2 - frequency1
-                  )
-                  .map(([tag, frequency], i) => (
-                    <Tag style={tagStyle} key={i}>
-                      {`${tag} (${frequency})`}
-                    </Tag>
-                  ))}
-              </Row>
-            </Row>
-            </animated.div>
-            <animated.div
-              style={{
-                transform: props.time.interpolate(
-                  time => `translateY(${150 * (1 - time)}px)`
-                ),
-                opacity: props.time
-              }}
-            >
-            <Row
-              type="flex"
-              align="middle"
-              justify="space-between"
-              span={12}
-              style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
-            >
-              <Col>Comments</Col>
-              <Col>
-                <Row type="flex" gutter={10}>
-                  <Col>
-                    <Select
-                      style={{ width: "10em" }}
-                      placeholder="Type"
-                      onChange={type =>
-                        this.setState({ filterCommentsBy: type }, this.filter)
-                      }
-                      allowClear
-                    >
-                      {SPEECH_TYPES.map((type, i) => (
-                        <Option key={i} value={type}>
-                          {type}
-                        </Option>
+            {Object.entries(this.state.tags).length > 0 ? (
+              <animated.div
+                style={{
+                  transform: props.time.interpolate(
+                    time => `translateY(${150 * (1 - time)}px)`
+                  ),
+                  opacity: props.time
+                }}
+              >
+                <Row
+                  style={{
+                    fontSize: "25px",
+                    fontWeight: 600,
+                    marginTop: "4em"
+                  }}
+                >
+                  <Row style={{ marginBottom: "1em" }}>Tags</Row>
+                  <Row>
+                    {Object.entries(this.state.tags)
+                      .sort(
+                        ([, frequency1], [, frequency2]) =>
+                          frequency2 - frequency1
+                      )
+                      .map(([tag, frequency], i) => (
+                        <Tag style={tagStyle} key={i}>
+                          {`${tag} (${frequency})`}
+                        </Tag>
                       ))}
-                    </Select>
-                  </Col>
-                  <Col>
-                    <Select
-                      defaultValue={this.props.sortCommentsBy}
-                      style={{ width: "10em" }}
-                      placeholder="Sort"
-                      onChange={by => {
-                        this.setState({ sortCommentsBy: by }, this.sort);
-                        this.props.changeSortCommentsBy(by);
-                      }}
-                    >
-                      <Option value={SORTS.latest_first}>
-                        {SORTS.latest_first}
-                      </Option>
-                      <Option value={SORTS.earliest_first}>
-                        {SORTS.earliest_first}
-                      </Option>
-                      <Option value={SORTS.highest_score}>
-                        {SORTS.highest_score}
-                      </Option>
-                      <Option value={SORTS.lowest_score}>
-                        {SORTS.lowest_score}
-                      </Option>
-                    </Select>
-                  </Col>
+                  </Row>
                 </Row>
-              </Col>
-            </Row>
+              </animated.div>
+            ) : null}
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${150 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Row
+                type="flex"
+                align="middle"
+                justify="space-between"
+                span={12}
+                style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
+              >
+                <Col>Comments</Col>
+                <Col>
+                  <Row type="flex" gutter={10}>
+                    <Col>
+                      <Select
+                        style={{ width: "10em" }}
+                        placeholder="Type"
+                        onChange={type =>
+                          this.setState({ filterCommentsBy: type }, this.filter)
+                        }
+                        allowClear
+                      >
+                        {SPEECH_TYPES.map((type, i) => (
+                          <Option key={i} value={type}>
+                            {type}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Col>
+                    <Col>
+                      <Select
+                        defaultValue={this.props.sortCommentsBy}
+                        style={{ width: "10em" }}
+                        placeholder="Sort"
+                        onChange={by => {
+                          this.setState({ sortCommentsBy: by }, this.sort);
+                          this.props.changeSortCommentsBy(by);
+                        }}
+                      >
+                        <Option value={SORTS.latest_first}>
+                          {SORTS.latest_first}
+                        </Option>
+                        <Option value={SORTS.earliest_first}>
+                          {SORTS.earliest_first}
+                        </Option>
+                        <Option value={SORTS.highest_score}>
+                          {SORTS.highest_score}
+                        </Option>
+                        <Option value={SORTS.lowest_score}>
+                          {SORTS.lowest_score}
+                        </Option>
+                      </Select>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
             </animated.div>
             <Row style={{ marginTop: "2em" }}>
               {this.state.displayedComments.length === 0 ? (
