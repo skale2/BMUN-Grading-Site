@@ -1,8 +1,9 @@
-import {
-	COMMITTEES,
-	COMMITTEE_BACKENDS,
-	DELEGATIONS
- } from "./config";
+import { COMMITTEES, COMMITTEE_BACKENDS, DELEGATIONS, API_KEY, CLIENT_ID } from "./config";
+
+let COMMITTEES_REVERSE = {};
+for (const key in COMMITTEES) {
+  COMMITTEES_REVERSE[COMMITTEES[key]] = key;
+}
 
 const SPEAKERS_LIST = "Speaker's List";
 const MODERATED = "Moderated";
@@ -18,6 +19,25 @@ const SPEECH_TYPES = [
   FORMAL,
   COMMENT,
   CRISIS
+];
+
+const TAGS = [
+  "Great Points",
+  "Convincing Speaker",
+  "Good Body Language",
+  "Shows Leadership",
+  "Encourages Others",
+  "Uses Parli Pro Well",
+  "Well Researched",
+  "Highly Professional",
+  "Represents Delegation",
+  "Persuasive Caucuser",
+  "Teaches Others",
+  "Good Partnership",
+  "Leverages Resources",
+  "On Topic",
+  "Well Written Resolution",
+  "Makes Connections"
 ];
 
 const SORTS = {
@@ -44,5 +64,7 @@ export {
   DELEGATIONS,
   TAGS,
   SPEECH_TYPES,
-  SORTS
+  SORTS,
+  API_KEY,
+  CLIENT_ID
 };

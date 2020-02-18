@@ -1,7 +1,7 @@
 import React from "react";
 import { Spring, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Button } from "antd";
+import { Row, Button } from "antd";
 import backend from "../backend";
 import CommitteeSelect from "./CommitteeSelect";
 import { COMMITTEES_REVERSE } from "../constants";
