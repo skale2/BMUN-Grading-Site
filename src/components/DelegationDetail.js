@@ -1,4 +1,5 @@
 import React from "react";
+import { Spring, animated, config } from "react-spring/renderprops";
 import { withRouter, Link } from "react-router-dom";
 import ScrollableAnchor from "react-scrollable-anchor";
 import {
@@ -21,12 +22,15 @@ import {
   UNMODERATED,
   FORMAL,
   COMMENT,
+  TAGS,
   SPEECH_TYPES,
   CRISIS,
   SORTS
 } from "../constants";
 
 import backend from "../backend";
+
+import { tagStyle } from "../style";
 
 const { Option } = Select;
 
@@ -80,10 +84,10 @@ class DelegationDetail extends React.Component {
       spoken[response.type] += 1;
 
       for (const tag in response.tags) {
-        if (!(tag in tags)) {
-          tags[tag] = 0;
+        if (!(TAGS[tag] in tags)) {
+          tags[TAGS[tag]] = 1;
         } else {
-          tags[tag]++;
+          tags[TAGS[tag]]++;
         }
       }
     });
@@ -207,9 +211,8 @@ class DelegationDetail extends React.Component {
           {comment.tags.length > 0 ? (
             <div style={{ marginTop: "2em" }}>
               {comment.tags.map((tag, j) => (
-                <Tag style={{ margin: "5px 5px 5px 0px" }} key={j}>
-                  {" "}
-                  {tag}{" "}
+                <Tag style={tagStyle} key={j}>
+                  {tag}
                 </Tag>
               ))}
             </div>
@@ -239,171 +242,249 @@ class DelegationDetail extends React.Component {
       );
 
     return (
-      <div>
-        <Row type="flex" justify="space-between">
-          <Col style={{ fontSize: "40px", fontWeight: "700" }}>
-            {this.props.delegation}
-          </Col>
-          <Col style={{ marginTop: "10px" }}>
-            <Link
-              to={`/${this.props.committee}/grade/${this.props.delegation}`}
-            >
-              <Button size="large" type="primary">
-                Grade
-              </Button>
-            </Link>
-          </Col>
-        </Row>
-        <Divider />
-        <Row
-          type="flex"
-          align="bottom"
-          style={{ width: "30em", margin: "3em auto 3em 0" }}
-        >
-          <Col span={12} style={{ fontSize: "30px", fontWeight: 600 }}>
-            Score
-          </Col>
-          <Col
-            span={1.9 * this.state.score.toString().length}
-            style={{ float: "right", fontSize: "50px", marginBottom: "-12px" }}
-          >
-            {this.state.score}
-          </Col>
-          <Col span={4} style={{ float: "left", fontSize: "25px" }}>
-            /10
-          </Col>
-        </Row>
-        <Row
-          type="flex"
-          align="bottom"
-          style={{ width: "30em", marginTop: "5em" }}
-        >
-          <Col span={12} style={{ fontSize: "25px", fontWeight: 600 }}>
-            Times Spoken
-          </Col>
-          <Col
-            span={8}
-            style={{ float: "right", fontSize: "40px", marginBottom: "-7px" }}
-          >
-            {this.state.timesSpoken}
-          </Col>
-        </Row>
-        <Row type="flex" justify="space-around" style={{ marginTop: "3em" }}>
-          <Col>
-            <Statistic
-              title="Speaker's List"
-              value={this.state.spoken[SPEAKERS_LIST]}
-              suffix="times"
-            />
-          </Col>
-          <Col>
-            <Statistic
-              title="Moderated"
-              value={this.state.spoken[MODERATED]}
-              suffix="times"
-            />
-          </Col>
-          <Col>
-            <Statistic
-              title="Unmoderated"
-              value={this.state.spoken[UNMODERATED]}
-              suffix="times"
-            />
-          </Col>
-          <Col>
-            <Statistic
-              title="Formal"
-              value={this.state.spoken[FORMAL]}
-              suffix="times"
-            />
-          </Col>
-          <Col>
-            <Statistic
-              title="Comment"
-              value={this.state.spoken[COMMENT]}
-              suffix="times"
-            />
-          </Col>
-          <Col>
-            <Statistic
-              title="Crisis"
-              value={this.state.spoken[CRISIS]}
-              suffix="times"
-            />
-          </Col>
-        </Row>
-        <Row
-          type="flex"
-          align="middle"
-          justify="space-between"
-          span={12}
-          style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
-        >
-          <Col>Comments</Col>
-          <Col>
-            <Row type="flex" gutter={10}>
-              <Col>
-                <Select
-                  style={{ width: "10em" }}
-                  placeholder="Type"
-                  onChange={type =>
-                    this.setState({ filterCommentsBy: type }, this.filter)
-                  }
-                  allowClear
-                >
-                  {SPEECH_TYPES.map((type, i) => (
-                    <Option key={i} value={type}>
-                      {type}
-                    </Option>
-                  ))}
-                </Select>
+      <Spring native config={config.stiff} from={{ time: 0 }} to={{ time: 1 }}>
+        {props => (
+          <div>
+            <Row type="flex" justify="space-between">
+              <Col style={{ fontSize: "40px", fontWeight: "700" }}>
+                {this.props.delegation}
               </Col>
-              <Col>
-                <Select
-                  defaultValue={this.props.sortCommentsBy}
-                  style={{ width: "10em" }}
-                  placeholder="Sort"
-                  onChange={by => {
-                    this.setState({ sortCommentsBy: by }, this.sort);
-                    this.props.changeSortCommentsBy(by);
-                  }}
+              <Col style={{ marginTop: "10px" }}>
+                <Link
+                  to={`/${this.props.committee}/grade/${this.props.delegation}`}
                 >
-                  <Option value={SORTS.latest_first}>
-                    {SORTS.latest_first}
-                  </Option>
-                  <Option value={SORTS.earliest_first}>
-                    {SORTS.earliest_first}
-                  </Option>
-                  <Option value={SORTS.highest_score}>
-                    {SORTS.highest_score}
-                  </Option>
-                  <Option value={SORTS.lowest_score}>
-                    {SORTS.lowest_score}
-                  </Option>
-                </Select>
+                  <Button size="large" type="primary">
+                    Grade
+                  </Button>
+                </Link>
               </Col>
             </Row>
-          </Col>
-        </Row>
-        <Row style={{ marginTop: "2em" }}>
-          {this.state.displayedComments.length === 0 ? (
-            <Empty description="No comments yet! Did you try a different set of filters?" />
-          ) : (
-            <div>
-              <Col span={12}>
-                {this.state.displayedComments
-                  .filter((_, i) => i % 2 === 0)
-                  .map((comment, i) => this.commentRender(comment, i))}
+
+            <Divider />
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${50 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Row
+                type="flex"
+                align="bottom"
+                style={{ width: "30em", margin: "3em auto 3em 0" }}
+              >
+                <Col span={12} style={{ fontSize: "30px", fontWeight: 600 }}>
+                  Score
+                </Col>
+                <Col
+                  span={1.9 * this.state.score.toString().length}
+                  style={{
+                    float: "right",
+                    fontSize: "50px",
+                    marginBottom: "-12px"
+                  }}
+                >
+                  {this.state.score}
+                </Col>
+                <Col span={4} style={{ float: "left", fontSize: "25px" }}>
+                  /10
+                </Col>
+              </Row>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${100 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Row
+                type="flex"
+                align="bottom"
+                style={{ width: "30em", marginTop: "5em" }}
+              >
+                <Col span={12} style={{ fontSize: "25px", fontWeight: 600 }}>
+                  Times Spoken
+                </Col>
+                <Col
+                  span={8}
+                  style={{
+                    float: "right",
+                    fontSize: "40px",
+                    marginBottom: "-7px"
+                  }}
+                >
+                  {this.state.timesSpoken}
+                </Col>
+              </Row>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${150 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Row
+                type="flex"
+                justify="space-around"
+                style={{ marginTop: "3em" }}
+              >
+                <Col>
+                  <Statistic
+                    title="Speaker's List"
+                    value={this.state.spoken[SPEAKERS_LIST]}
+                    suffix="times"
+                  />
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Moderated"
+                    value={this.state.spoken[MODERATED]}
+                    suffix="times"
+                  />
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Unmoderated"
+                    value={this.state.spoken[UNMODERATED]}
+                    suffix="times"
+                  />
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Formal"
+                    value={this.state.spoken[FORMAL]}
+                    suffix="times"
+                  />
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Comment"
+                    value={this.state.spoken[COMMENT]}
+                    suffix="times"
+                  />
+                </Col>
+                <Col>
+                  <Statistic
+                    title="Crisis"
+                    value={this.state.spoken[CRISIS]}
+                    suffix="times"
+                  />
+                </Col>
+              </Row>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${150 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+            <Row
+              style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
+            >
+              <Row style={{ marginBottom: "1em" }}>Tags</Row>
+              <Row>
+                {Object.entries(this.state.tags)
+                  .sort(
+                    ([, frequency1], [, frequency2]) => frequency2 - frequency1
+                  )
+                  .map(([tag, frequency], i) => (
+                    <Tag style={tagStyle} key={i}>
+                      {`${tag} (${frequency})`}
+                    </Tag>
+                  ))}
+              </Row>
+            </Row>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${150 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+            <Row
+              type="flex"
+              align="middle"
+              justify="space-between"
+              span={12}
+              style={{ fontSize: "25px", fontWeight: 600, marginTop: "4em" }}
+            >
+              <Col>Comments</Col>
+              <Col>
+                <Row type="flex" gutter={10}>
+                  <Col>
+                    <Select
+                      style={{ width: "10em" }}
+                      placeholder="Type"
+                      onChange={type =>
+                        this.setState({ filterCommentsBy: type }, this.filter)
+                      }
+                      allowClear
+                    >
+                      {SPEECH_TYPES.map((type, i) => (
+                        <Option key={i} value={type}>
+                          {type}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Col>
+                  <Col>
+                    <Select
+                      defaultValue={this.props.sortCommentsBy}
+                      style={{ width: "10em" }}
+                      placeholder="Sort"
+                      onChange={by => {
+                        this.setState({ sortCommentsBy: by }, this.sort);
+                        this.props.changeSortCommentsBy(by);
+                      }}
+                    >
+                      <Option value={SORTS.latest_first}>
+                        {SORTS.latest_first}
+                      </Option>
+                      <Option value={SORTS.earliest_first}>
+                        {SORTS.earliest_first}
+                      </Option>
+                      <Option value={SORTS.highest_score}>
+                        {SORTS.highest_score}
+                      </Option>
+                      <Option value={SORTS.lowest_score}>
+                        {SORTS.lowest_score}
+                      </Option>
+                    </Select>
+                  </Col>
+                </Row>
               </Col>
-              <Col span={12}>
-                {this.state.displayedComments
-                  .filter((_, i) => i % 2 === 1)
-                  .map((comment, i) => this.commentRender(comment, i))}
-              </Col>
-            </div>
-          )}
-        </Row>
-      </div>
+            </Row>
+            </animated.div>
+            <Row style={{ marginTop: "2em" }}>
+              {this.state.displayedComments.length === 0 ? (
+                <Empty description="No comments yet! Did you try a different set of filters?" />
+              ) : (
+                <div>
+                  <Col span={12}>
+                    {this.state.displayedComments
+                      .filter((_, i) => i % 2 === 0)
+                      .map((comment, i) => this.commentRender(comment, i))}
+                  </Col>
+                  <Col span={12}>
+                    {this.state.displayedComments
+                      .filter((_, i) => i % 2 === 1)
+                      .map((comment, i) => this.commentRender(comment, i))}
+                  </Col>
+                </div>
+              )}
+            </Row>
+          </div>
+        )}
+      </Spring>
     );
   }
 }

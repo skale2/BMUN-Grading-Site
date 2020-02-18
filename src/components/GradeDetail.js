@@ -1,4 +1,5 @@
 import React from "react";
+import { Spring, animated, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
 import {
   Form,
@@ -24,6 +25,8 @@ import { goToAnchor, configureAnchors } from "react-scrollable-anchor";
 
 import { TAGS, SPEECH_TYPES } from "../constants";
 import backend from "../backend";
+
+import { tagStyle } from "../style";
 
 const { TextArea } = Input;
 
@@ -182,202 +185,254 @@ class GradeDetail extends React.Component {
 
   render() {
     return (
-      <Form>
-        <div style={{ fontSize: "40px", fontWeight: "700", float: "left" }}>
-          {this.props.delegation}
-        </div>
-
-        <Divider />
-
-        <ScrollableAnchor id={"type"}>
-          <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex" align="middle">
-              <Col
-                span={4}
-                style={{
-                  textAlign: "right",
-                  fontSize: "25px",
-                  fontWeight: 600
-                }}
-              >
-                Type
-              </Col>
-              <Col span={2} />
-              <Col span={18}>
-                <Row type="flex" justify="center">
-                  {[
-                    SPEAKERS_LIST,
-                    MODERATED,
-                    UNMODERATED,
-                    FORMAL,
-                    COMMENT,
-                    CRISIS
-                  ].map((val, i) => (
-                    <Col key={i}>
-                      <Button
-                        size="large"
-                        onClick={() => this.handleTypeClick(i)}
-                        type={this.state.type === i ? "primary" : null}
-                        style={{
-                          margin: "0.5em",
-                          width: "11em",
-                          height: "3em",
-                          display: "flex"
-                        }}
-                      >
-                        <div>
-                          <div style={{ float: "left", marginRight: "7px" }}>
-                            <div
+      <Spring native config={config.stiff} from={{ time: 0 }} to={{ time: 1 }}>
+        {props => (
+          <Form>
+            <div style={{ fontSize: "40px", fontWeight: "700", float: "left" }}>
+              {this.props.delegation}
+            </div>
+            <Divider />
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${50 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <ScrollableAnchor id={"type"}>
+                <Form.Item style={{ margin: "7em 0em" }}>
+                  <Row type="flex" align="middle">
+                    <Col
+                      span={4}
+                      style={{
+                        textAlign: "right",
+                        fontSize: "25px",
+                        fontWeight: 600
+                      }}
+                    >
+                      Type
+                    </Col>
+                    <Col span={2} />
+                    <Col span={18}>
+                      <Row type="flex" justify="center">
+                        {[
+                          SPEAKERS_LIST,
+                          MODERATED,
+                          UNMODERATED,
+                          FORMAL,
+                          COMMENT,
+                          CRISIS
+                        ].map((val, i) => (
+                          <Col key={i}>
+                            <Button
+                              size="large"
+                              onClick={() => this.handleTypeClick(i)}
+                              type={this.state.type === i ? "primary" : null}
                               style={{
-                                fontWeight: 600,
-                                fontSize: "15px",
-                                marginBottom: "-3px"
+                                margin: "0.5em",
+                                width: "11em",
+                                height: "3em",
+                                display: "flex"
                               }}
                             >
-                              {i + 1}
-                            </div>
-                            <div style={{ fontSize: "7px", fontWeight: 700 }}>
-                              PRESS
-                            </div>
-                          </div>
-                          <div style={{ marginTop: "3px" }}>{val}</div>
-                        </div>
-                      </Button>
+                              <div>
+                                <div
+                                  style={{ float: "left", marginRight: "7px" }}
+                                >
+                                  <div
+                                    style={{
+                                      fontWeight: 600,
+                                      fontSize: "15px",
+                                      marginBottom: "-3px"
+                                    }}
+                                  >
+                                    {i + 1}
+                                  </div>
+                                  <div
+                                    style={{ fontSize: "7px", fontWeight: 700 }}
+                                  >
+                                    PRESS
+                                  </div>
+                                </div>
+                                <div style={{ marginTop: "3px" }}>{val}</div>
+                              </div>
+                            </Button>
+                          </Col>
+                        ))}
+                      </Row>
                     </Col>
-                  ))}
-                </Row>
-              </Col>
-            </Row>
-          </Form.Item>
-        </ScrollableAnchor>
-        <ScrollableAnchor id={"score"}>
-          <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex" align="middle">
-              <Col
-                span={4}
-                style={{
-                  textAlign: "right",
-                  fontSize: "25px",
-                  fontWeight: 600
-                }}
-              >
-                Score
-              </Col>
-              <Col span={2} />
-              <Col span={18}>
-                <Row type="flex" justify="center" style={{ margin: "0em 4em" }}>
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val, i) => (
-                    <Col key={i}>
-                      <Button
-                        size="large"
-                        onClick={() => this.handleScoreClick(val)}
-                        type={this.state.score === val ? "primary" : null}
-                        style={{ margin: "0.5em", width: "4em", height: "3em" }}
-                      >
-                        <div
-                          style={{
-                            fontWeight: 600
-                          }}
-                        >
-                          {val}
-                        </div>
-                        <div style={{ fontSize: "8px", fontWeight: 700 }}>
-                          PRESS
-                        </div>
-                      </Button>
-                    </Col>
-                  ))}
-                </Row>
-              </Col>
-            </Row>
-          </Form.Item>
-        </ScrollableAnchor>
-        <ScrollableAnchor id={"tags"}>
-          <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex" align="middle">
-              <Col
-                span={4}
-                style={{
-                  textAlign: "right",
-                  fontSize: "25px",
-                  fontWeight: 600
-                }}
-              >
-                Tags
-              </Col>
-              <Col span={2} />
-              <Col span={18}>
-                {TAGS.map((val, i) => (
-                  <Tag.CheckableTag
-                    key={i}
-                    checked={this.state.tags.has(val)}
-                    onChange={() => this.handleTagSelect(val)}
+                  </Row>
+                </Form.Item>
+              </ScrollableAnchor>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${100 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+            <ScrollableAnchor id={"score"}>
+              <Form.Item style={{ margin: "7em 0em" }}>
+                <Row type="flex" align="middle">
+                  <Col
+                    span={4}
                     style={{
-                      border: this.state.tags.has(val)
-                        ? null
-                        : "1px solid rgb(217, 217, 217)"
+                      textAlign: "right",
+                      fontSize: "25px",
+                      fontWeight: 600
                     }}
                   >
-                    {val}
-                  </Tag.CheckableTag>
-                ))}
-              </Col>
-            </Row>
-          </Form.Item>
-        </ScrollableAnchor>
-        <ScrollableAnchor id={"comments"}>
-          <Form.Item style={{ margin: "7em 0em" }}>
-            <Row type="flex" align="middle">
-              <Col
-                span={4}
-                style={{
-                  textAlign: "right",
-                  fontSize: "25px",
-                  fontWeight: 600
-                }}
-              >
-                Comments
-              </Col>
-              <Col span={2} />
-              <Col span={18}>
-                <TextArea
-                  allowClear
-                  rows={8}
-                  value={this.state.comments}
-                  onChange={this.handleAddComment}
-                  ref={comments => {
-                    this.commentsRef = comments;
-                  }}
-                />
-              </Col>
-            </Row>
-          </Form.Item>
-        </ScrollableAnchor>
-        <Form.Item>
-          <Affix offsetBottom={100}>
-            <Button
-              type="primary"
-              size="large"
+                    Score
+                  </Col>
+                  <Col span={2} />
+                  <Col span={18}>
+                    <Row
+                      type="flex"
+                      justify="center"
+                      style={{ margin: "0em 4em" }}
+                    >
+                      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val, i) => (
+                        <Col key={i}>
+                          <Button
+                            size="large"
+                            onClick={() => this.handleScoreClick(val)}
+                            type={this.state.score === val ? "primary" : null}
+                            style={{
+                              margin: "0.5em",
+                              width: "4em",
+                              height: "3em"
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontWeight: 600
+                              }}
+                            >
+                              {val}
+                            </div>
+                            <div style={{ fontSize: "8px", fontWeight: 700 }}>
+                              PRESS
+                            </div>
+                          </Button>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Col>
+                </Row>
+              </Form.Item>
+            </ScrollableAnchor>
+            </animated.div>
+            <animated.div
               style={{
-                float: "right",
-                fontSize: "20px"
+                transform: props.time.interpolate(
+                  time => `translateY(${150 * (1 - time)}px)`
+                ),
+                opacity: props.time
               }}
-              onClick={this.handleSubmit}
-              disabled={this.state.type < 0 || this.state.score < 0}
             >
-              <Row type="flex" align="middle" justify="space-between">
-                <Col span={5}>Submit</Col>
-                <Col span={7}>
-                  <div style={{ fontSize: "10px", marginRight: "1em" }}>
-                    <div style={{ marginLeft: "2px" }}>SHIFT</div>
-                    <div>ENTER</div>
-                  </div>
-                </Col>
-              </Row>
-            </Button>
-          </Affix>
-        </Form.Item>
-      </Form>
+            <ScrollableAnchor id={"tags"}>
+              <Form.Item style={{ margin: "7em 0em" }}>
+                <Row type="flex" align="middle">
+                  <Col
+                    span={4}
+                    style={{
+                      textAlign: "right",
+                      fontSize: "25px",
+                      fontWeight: 600
+                    }}
+                  >
+                    Tags
+                  </Col>
+                  <Col span={2} />
+                  <Col span={18}>
+                    {TAGS.map((val, i) => (
+                      <Tag.CheckableTag
+                        key={i}
+                        checked={this.state.tags.has(val)}
+                        onChange={() => this.handleTagSelect(val)}
+                        style={{
+                          ...tagStyle,
+                          cursor: "pointer",
+                          border: this.state.tags.has(val)
+                            ? null
+                            : "1px solid rgb(217, 217, 217)"
+                        }}
+                      >
+                        {val}
+                      </Tag.CheckableTag>
+                    ))}
+                  </Col>
+                </Row>
+              </Form.Item>
+            </ScrollableAnchor>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${200 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+            <ScrollableAnchor id={"comments"}>
+              <Form.Item style={{ margin: "7em 0em" }}>
+                <Row type="flex" align="middle">
+                  <Col
+                    span={4}
+                    style={{
+                      textAlign: "right",
+                      fontSize: "25px",
+                      fontWeight: 600
+                    }}
+                  >
+                    Comments
+                  </Col>
+                  <Col span={2} />
+                  <Col span={18}>
+                    <TextArea
+                      allowClear
+                      rows={8}
+                      value={this.state.comments}
+                      onChange={this.handleAddComment}
+                      ref={comments => {
+                        this.commentsRef = comments;
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Form.Item>
+            </ScrollableAnchor>
+            </animated.div>
+            <Form.Item>
+              <Affix offsetBottom={100}>
+                <Button
+                  type="primary"
+                  size="large"
+                  style={{
+                    float: "right",
+                    fontSize: "20px"
+                  }}
+                  onClick={this.handleSubmit}
+                  disabled={this.state.type < 0 || this.state.score < 0}
+                >
+                  <Row type="flex" align="middle" justify="space-between">
+                    <Col span={5}>Submit</Col>
+                    <Col span={7}>
+                      <div style={{ fontSize: "10px", marginRight: "1em" }}>
+                        <div style={{ marginLeft: "2px" }}>SHIFT</div>
+                        <div>ENTER</div>
+                      </div>
+                    </Col>
+                  </Row>
+                </Button>
+              </Affix>
+            </Form.Item>
+          </Form>
+        )}
+      </Spring>
     );
   }
 }
