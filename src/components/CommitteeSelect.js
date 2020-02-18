@@ -33,7 +33,10 @@ class CommitteeSelect extends React.Component {
 
   render() {
     return (
-      <div onKeyPress={this.handleKeyPress}>
+      <div
+        onKeyPress={this.handleKeyPress}
+        style={{ ...this.props.style, fontSize: 20 }}
+      >
         <SearchBar
           style={{ width: 600 }}
           values={Object.values(COMMITTEES)}

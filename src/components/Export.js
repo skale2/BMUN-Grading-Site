@@ -163,7 +163,6 @@ class Export extends React.Component {
               Create a new spreadsheet
             </Title>
           </Row>
-
           <Row style={{ width: "70%", margin: "0em auto 5em" }}>
             <div
               style={{ fontSize: 18, fontWeight: 500, margin: "0em 0em 0.5em" }}

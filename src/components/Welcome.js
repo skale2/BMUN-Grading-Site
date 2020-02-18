@@ -80,7 +80,10 @@ class Welcome extends React.Component {
             {props.time > 0.5 ? (
               <div style={{ opacity: props.time }}>
                 <Row type="flex" justify="center">
-                  <CommitteeSelect gotoCommittee={this.gotoCommittee} />
+                  <CommitteeSelect
+                    style={{ marginTop: "2em" }}
+                    gotoCommittee={this.gotoCommittee}
+                  />
                 </Row>
               </div>
             ) : null}

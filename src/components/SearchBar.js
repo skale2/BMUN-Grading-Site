@@ -131,8 +131,8 @@ class SearchBar extends React.Component {
             <Search
               placeholder={this.placeHolder}
               onChange={this.updateResults}
+              size="large"
               style={{
-                size: "large",
                 height: 60,
                 borderRadius: "5px",
                 boxShadow:
