@@ -34,6 +34,7 @@ import { tagStyle } from "../style";
 
 const { Option } = Select;
 
+
 class DelegationDetail extends React.Component {
   constructor(props) {
     super(props);
@@ -204,7 +205,7 @@ class DelegationDetail extends React.Component {
           }
         >
           <div
-            style={{ color: comment.text.length > 0 ? "#363636" : "#a5a5a5" }}
+            style={{ wordWrap: 'break-word', color: comment.text.length > 0 ? "#363636" : "#a5a5a5" }}
           >
             {comment.text.length > 0 ? comment.text : "No comment"}
           </div>
