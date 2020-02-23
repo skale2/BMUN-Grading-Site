@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 import { Spring, animated, config } from "react-spring/renderprops";
 import { withRouter, Link } from "react-router-dom";
 import ScrollableAnchor from "react-scrollable-anchor";
@@ -25,7 +26,8 @@ import {
   TAGS,
   SPEECH_TYPES,
   CRISIS,
-  SORTS
+  SORTS,
+  CHAIRS
 } from "../constants";
 
 import backend from "../backend";
@@ -52,7 +54,8 @@ class DelegationDetail extends React.Component {
       tags: {},
       comments: [],
       displayedComments: [],
-      filterCommentsBy: undefined,
+      authorIs: undefined,
+      speechTypeIs: undefined,
       sortCommentsBy: this.props.sortCommentsBy,
       deletingComment: undefined
     };
@@ -124,9 +127,14 @@ class DelegationDetail extends React.Component {
   filter = () => {
     let displayedComments = this.state.comments.slice();
 
-    if (this.state.filterCommentsBy !== undefined)
+    if (this.state.speechTypeIs !== undefined)
       displayedComments = displayedComments.filter(
-        comment => comment.type === this.state.filterCommentsBy
+        comment => comment.type === this.state.speechTypeIs
+      );
+
+    if (this.state.authorIs !== undefined)
+      displayedComments = displayedComments.filter(
+        comment => comment.author === this.state.authorIs
       );
 
     this.setState(
@@ -229,7 +237,7 @@ class DelegationDetail extends React.Component {
               marginTop: "1em"
             }}
           >
-            {comment.date.toLocaleDateString("en-US")}
+            {comment.author}, {moment(comment.date).format("M/D/YY")}
           </div>
         </Card>
       </div>
@@ -267,7 +275,7 @@ class DelegationDetail extends React.Component {
             <animated.div
               style={{
                 transform: props.time.interpolate(
-                  time => `translateY(${50 * (1 - time)}px)`
+                  time => `translateY(${25 * (1 - time)}px)`
                 ),
                 opacity: props.time
               }}
@@ -298,7 +306,7 @@ class DelegationDetail extends React.Component {
             <animated.div
               style={{
                 transform: props.time.interpolate(
-                  time => `translateY(${100 * (1 - time)}px)`
+                  time => `translateY(${50 * (1 - time)}px)`
                 ),
                 opacity: props.time
               }}
@@ -326,7 +334,7 @@ class DelegationDetail extends React.Component {
             <animated.div
               style={{
                 transform: props.time.interpolate(
-                  time => `translateY(${150 * (1 - time)}px)`
+                  time => `translateY(${75 * (1 - time)}px)`
                 ),
                 opacity: props.time
               }}
@@ -340,42 +348,54 @@ class DelegationDetail extends React.Component {
                   <Statistic
                     title="Speaker's List"
                     value={this.state.spoken[SPEAKERS_LIST]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Moderated"
                     value={this.state.spoken[MODERATED]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Unmoderated"
                     value={this.state.spoken[UNMODERATED]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Formal"
                     value={this.state.spoken[FORMAL]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Comment"
                     value={this.state.spoken[COMMENT]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Crisis"
                     value={this.state.spoken[CRISIS]}
-                    suffix="times"
+                    suffix={
+                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                    }
                   />
                 </Col>
               </Row>
@@ -384,7 +404,7 @@ class DelegationDetail extends React.Component {
               <animated.div
                 style={{
                   transform: props.time.interpolate(
-                    time => `translateY(${150 * (1 - time)}px)`
+                    time => `translateY(${100 * (1 - time)}px)`
                   ),
                   opacity: props.time
                 }}
@@ -415,7 +435,7 @@ class DelegationDetail extends React.Component {
             <animated.div
               style={{
                 transform: props.time.interpolate(
-                  time => `translateY(${150 * (1 - time)}px)`
+                  time => `translateY(${125 * (1 - time)}px)`
                 ),
                 opacity: props.time
               }}
@@ -433,9 +453,25 @@ class DelegationDetail extends React.Component {
                     <Col>
                       <Select
                         style={{ width: "10em" }}
+                        placeholder="Author"
+                        onChange={author =>
+                          this.setState({ authorIs: author }, this.filter)
+                        }
+                        allowClear
+                      >
+                        {CHAIRS[this.props.committee].map((type, i) => (
+                          <Option key={i} value={type}>
+                            {type}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Col>
+                    <Col>
+                      <Select
+                        style={{ width: "10em" }}
                         placeholder="Type"
                         onChange={type =>
-                          this.setState({ filterCommentsBy: type }, this.filter)
+                          this.setState({ speechTypeIs: type }, this.filter)
                         }
                         allowClear
                       >

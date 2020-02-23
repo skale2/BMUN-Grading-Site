@@ -127,7 +127,7 @@ class DelegationList extends React.Component {
                       key={i}
                       style={{
                         transform: props.time.interpolate(
-                          time => `translateY(${(50 + 25 * i) * (1 - time)}px)`
+                          time => `translateY(${(10 + 25 * i) * (1 - time)}px)`
                         ),
                         opacity: props.time
                       }}
@@ -136,7 +136,6 @@ class DelegationList extends React.Component {
                         href={`/${this.props.committee}/delegations/${name}`}
                         highlighted={i === 0 && this.state.highlighted != null}
                         timesSpoken={this.state.timesSpoken[name]}
-                        ref={this[name]}
                       >
                         {name}
                       </SequenceButton>
@@ -146,7 +145,6 @@ class DelegationList extends React.Component {
                       href={`/${this.props.committee}/delegations/${name}`}
                       highlighted={i === 0 && this.state.highlighted != null}
                       timesSpoken={this.state.timesSpoken[name]}
-                      ref={this[name]}
                       key={i}
                     >
                       {name}

@@ -22,19 +22,24 @@ function rowToObject(row, i) {
     type: SPEECH_TYPES[parseInt(row[2])],
     score: parseInt(row[3]),
     tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
-    text: row[5] !== undefined ? row[5] : ""
+    text: row[5] !== undefined ? row[5] : "",
+    author: row[6]
   };
 }
 
 class Backend {
   constructor() {
     this.isReady = false;
-    this.auth = null;
-    this.user = null;
-    this.isReadyCallbacks = [];
+    this.auth = undefined;
     this.spreadsheetId = undefined;
     this.committee = undefined;
     this.delegations = undefined;
+    this.isReadyCallbacks = [];
+    this.user = {
+      name: undefined,
+      email: undefined,
+      avatarUrl: undefined
+    };
 
     window.gapi.load("client:auth2", this.initClient);
   }
@@ -51,9 +56,21 @@ class Backend {
         () => {
           this.auth = window.gapi.auth2.getAuthInstance();
           this.isReady = this.auth.isSignedIn.get();
+
+          let basicProfile = this.auth.currentUser.je.getBasicProfile();
+
+          /* I'm not sure if this is how you're supposed to use this... */
+          this.user = {
+            name: basicProfile.Ad,
+            email: basicProfile.zu,
+            avatarUrl: basicProfile.UK
+          };
+
           for (let callback of this.isReadyCallbacks) {
             callback();
           }
+
+          console.log(this.user);
         },
         error => console.log(error)
       );
@@ -76,23 +93,31 @@ class Backend {
     }
   };
 
+  getUser = () => {
+    return this.user;
+  };
+
   comments = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     } else if (this.spreadsheetId === undefined) {
       console.error("Committee not defined");
+      message.error("We're having some issues on our end...");
     }
 
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: this.spreadsheetId,
-        range: "Sheet1!A:F",
+        range: "Sheet1!A:G",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
       })
       .then(
-        response => response.result.values.map(rowToObject),
+        response =>
+          response.result.values === undefined
+            ? []
+            : response.result.values.map(rowToObject),
         error => {
           console.error(error);
           message.error("We're having some issues on our end...");
@@ -100,7 +125,7 @@ class Backend {
       );
   };
 
-  grade = (delegation, type, score, tags, text) => {
+  grade = (delegation, type, score, tags, text, author) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -112,11 +137,11 @@ class Backend {
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
-          range: "Sheet1!A:F"
+          range: "Sheet1!A:G"
         },
         {
           majorDimension: "ROWS",
-          range: "Sheet1!A:F",
+          range: "Sheet1!A:G",
           values: [
             [
               Date.now(),
@@ -124,7 +149,8 @@ class Backend {
               type.toString(),
               score.toString(),
               Array.from(tags).join(","),
-              text
+              text,
+              author
             ]
           ]
         }
@@ -138,7 +164,7 @@ class Backend {
       );
   };
 
-  edit = (row, delegation, type, score, tags, text) => {
+  edit = (row, delegation, type, score, tags, text, author) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
     }
@@ -151,11 +177,11 @@ class Backend {
           spreadsheetId: this.spreadsheetId,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
-          range: `Sheet1!A${row + 1}:F${row + 1}`
+          range: `Sheet1!A${row + 1}:G${row + 1}`
         },
         {
           majorDimension: "ROWS",
-          range: `Sheet1!A${row + 1}:F${row + 1}`,
+          range: `Sheet1!A${row + 1}:G${row + 1}`,
           values: [
             [
               Date.now(),
@@ -163,7 +189,8 @@ class Backend {
               type.toString(),
               score.toString(),
               Array.from(tags).join(","),
-              text
+              text,
+              author
             ]
           ]
         }
@@ -185,16 +212,18 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: this.spreadsheetId,
-        range: "Sheet1!A:F",
+        range: "Sheet1!A:G",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
         valueRenderOption: "FORMATTED_VALUE"
       })
       .then(
         response =>
-          response.result.values
-            .map(rowToObject)
-            .filter(row => row.delegation === delegation),
+          response.result.values === undefined
+            ? []
+            : response.result.values
+                .map(rowToObject)
+                .filter(row => row.delegation === delegation),
         error => {
           console.error(error);
           message.error("We're having some issues on our end...");
@@ -259,10 +288,10 @@ class Backend {
               includeGridData: false,
               valueInputOption: "USER_ENTERED",
               insertDataOption: "OVERWRITE",
-              range: `Sheet1!A1:F${comments.length}`
+              range: `Sheet1!A1:G${comments.length}`
             },
             {
-              range: `Sheet1!A1:F${comments.length}`,
+              range: `Sheet1!A1:G${comments.length}`,
               majorDimension: "ROWS",
               values: (includeHeader
                 ? [
@@ -272,7 +301,8 @@ class Backend {
                       "Type",
                       "Score",
                       "Tags",
-                      "Comment"
+                      "Comment",
+                      "Author"
                     ]
                   ]
                 : []
@@ -285,7 +315,8 @@ class Backend {
                   comment.tags.length > 0
                     ? "[" + comment.tags.join("], [") + "]"
                     : "",
-                  comment.text
+                  comment.text,
+                  comment.author
                 ])
               )
             }
@@ -304,24 +335,24 @@ class Backend {
   };
 
   exportUpdate = (spreadsheetId, location, includeHeader) => {
-    return this.comments().then(comments => {
-      if (!/(.+?)!([A-Z])([0-9]+)/i.test(location)) {
-        return Promise.reject({
-          result: {
-            error: {
-              code: 400,
-              message: "Location not in single-cell A1 notation"
-            }
+    if (!/(.+?)!([A-Z])([0-9]+)/i.test(location)) {
+      return Promise.reject({
+        result: {
+          error: {
+            code: 400,
+            message: "Location not in single-cell A1 notation"
           }
-        });
-      }
+        }
+      });
+    }
 
+    return this.comments().then(comments => {
       let [_, sheetName, column, row] = location.match(
         /(.+?)!([A-Z])([0-9]+)/i
       );
 
       let range = `${sheetName}!${column}${row}:${String.fromCharCode(
-        column.charCodeAt(0) + 5
+        column.charCodeAt(0) + 6
       )}${row + comments.length}`;
 
       return window.gapi.client.sheets.spreadsheets.values.update(
@@ -335,7 +366,17 @@ class Backend {
           range: range,
           majorDimension: "ROWS",
           values: (includeHeader
-            ? [["Timestamp", "Delegation", "Type", "Score", "Tags", "Comment"]]
+            ? [
+                [
+                  "Timestamp",
+                  "Delegation",
+                  "Type",
+                  "Score",
+                  "Tags",
+                  "Comment",
+                  "Author"
+                ]
+              ]
             : []
           ).concat(
             comments.map(comment => [
@@ -346,7 +387,8 @@ class Backend {
               comment.tags.length > 0
                 ? "[" + comment.tags.join("], [") + "]"
                 : "",
-              comment.text
+              comment.text,
+              comment.author
             ])
           )
         }

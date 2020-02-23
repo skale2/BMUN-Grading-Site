@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Layout, Menu, Icon, Row, Col, Tooltip } from "antd";
+import { Layout, Menu, Icon, Row, Col, Tooltip, Avatar } from "antd";
 import { Link } from "react-router-dom";
 
 import { COMMITTEES } from "../constants";
+import backend from "../backend";
 
 const { Content } = Layout;
 
@@ -14,11 +15,28 @@ const Base = props => {
         type="flex"
         style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}
       >
-        <Link to="/welcome">
-          <Tooltip placement="bottom" title="← Select another committee">
-            {COMMITTEES[props.committee].toUpperCase()}
-          </Tooltip>
-        </Link>
+        <Col>
+          <Link to="/welcome">
+            <Tooltip placement="bottom" title="← Select another committee">
+              {COMMITTEES[props.committee].toUpperCase()}
+            </Tooltip>
+          </Link>
+        </Col>
+        <Col>
+          <div style={{ marginLeft: 10 }}>
+            <Link
+              to={`/${props.committee}/export`}
+              style={{ color: "rgba(0, 0, 0, 0.65)" }}
+            >
+              <Tooltip
+                placement="bottom"
+                title="Export committee to spreadsheet"
+              >
+                <Icon type="export" />
+              </Tooltip>
+            </Link>
+          </div>
+        </Col>
       </Row>
       <Row
         type="flex"
@@ -32,29 +50,44 @@ const Base = props => {
             fontWeight: 600
           }}
         >
-          {props.page.charAt(0).toUpperCase() + props.page.slice(1)}
+          <Link
+            to={`/${props.committee}/${props.page}`}
+            style={{ color: "rgba(0, 0, 0, 0.65)" }}
+          >
+            {props.page.charAt(0).toUpperCase() + props.page.slice(1)}
+          </Link>
         </Col>
         <Col>
-          <Menu mode="horizontal" selectedKeys={[props.page]}>
-            <Menu.Item key="grade">
-              <Link to={`/${props.committee}/grade`}>
-                <Icon type="edit" />
-                Grade
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="delegations">
-              <Link to={`/${props.committee}/delegations`}>
-                <Icon type="user" />
-                Delegations
-              </Link>
-            </Menu.Item>
-            <Menu.Item key="export">
-              <Link to={`/${props.committee}/export`}>
-                <Icon type="export" />
-                Export
-              </Link>
-            </Menu.Item>
-          </Menu>
+          <Row type="flex" align="middle" gutter={[30, 0]}>
+            <Col>
+              <Menu mode="horizontal" selectedKeys={[props.page]}>
+                <Menu.Item key="grade">
+                  <Link to={`/${props.committee}/grade`}>
+                    <Icon type="edit" />
+                    Grade
+                  </Link>
+                </Menu.Item>
+                <Menu.Item key="delegations">
+                  <Link to={`/${props.committee}/delegations`}>
+                    <Icon type="user" />
+                    Delegations
+                  </Link>
+                </Menu.Item>
+              </Menu>
+            </Col>
+            <Col>
+              <Tooltip
+                placement="bottom"
+                title={
+                  backend.getUser().name === "Soham Kale"
+                    ? "An absolute legend"
+                    : backend.getUser().name
+                }
+              >
+                <Avatar src={backend.getUser().avatarUrl} />
+              </Tooltip>
+            </Col>
+          </Row>
         </Col>
       </Row>
       <Content

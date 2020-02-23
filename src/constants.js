@@ -1,4 +1,11 @@
-import { COMMITTEES, COMMITTEE_BACKENDS, DELEGATIONS, API_KEY, CLIENT_ID } from "./config";
+import {
+  COMMITTEES,
+  COMMITTEE_BACKENDS,
+  DELEGATIONS,
+  API_KEY,
+  CLIENT_ID,
+  CHAIRS
+} from "./config";
 
 let COMMITTEES_REVERSE = {};
 for (const key in COMMITTEES) {
@@ -52,6 +59,7 @@ const SORTS = {
 };
 
 export {
+  CHAIRS,
   COMMITTEES,
   COMMITTEES_REVERSE,
   COMMITTEE_BACKENDS,

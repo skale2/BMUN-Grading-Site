@@ -1,4 +1,5 @@
 import React from "react";
+import { Spring, animated, config } from "react-spring/renderprops";
 import {
   Row,
   Col,
@@ -153,255 +154,318 @@ class Export extends React.Component {
 
   render() {
     return (
-      <Row>
-        <Form>
-          <Row>
-            <Title
-              style={{ color: "rgb(89, 89, 89", margin: "1em 0em 1.5em" }}
-              level={3}
-            >
-              Create a new spreadsheet
-            </Title>
-          </Row>
-          <Row style={{ width: "70%", margin: "0em auto 5em" }}>
-            <div
-              style={{ fontSize: 18, fontWeight: 500, margin: "0em 0em 0.5em" }}
-            >
-              Title
-            </div>
-            <div style={{ fontSize: 16, fontWeight: 400, marginBottom: "2em" }}>
-              The name of the new spreadsheet.
-            </div>
-            <Form.Item
+      <Spring native config={config.stiff} from={{ time: 0 }} to={{ time: 1 }}>
+        {props => (
+          <div>
+            <animated.div
               style={{
-                marginBottom: "3em"
+                transform: props.time.interpolate(
+                  time => `translateY(${25 * (1 - time)}px)`
+                ),
+                opacity: props.time
               }}
             >
-              <Input
-                size="large"
-                placeholder={`Committee Grading (${
-                  COMMITTEES[this.props.committee]
-                })`}
-                value={this.state.createPath.sheetName}
-                style={{ fontWeight: 500 }}
-                onChange={e => {
-                  this.setState({
-                    createPath: {
-                      ...this.state.createPath,
-                      sheetName: e.target.value
-                    }
-                  });
-                }}
-              />
-            </Form.Item>
-            <Form.Item style={{ marginBottom: "4em" }}>
-              <Row type="flex" gutter={20}>
-                <Col
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 500,
-                    marginBottom: "0.5em"
-                  }}
-                >
-                  Include header row
-                </Col>
-                <Col>
-                  <Switch
-                    checked={this.state.createPath.includeHeader}
-                    onChange={checked =>
-                      this.setState({
-                        createPath: {
-                          ...this.state.createPath,
-                          includeHeader: checked
-                        }
-                      })
-                    }
-                  />
-                </Col>
-              </Row>
-              <div style={{ fontSize: 16, fontWeight: 400 }}>
-                Whether to include an extra header row with column names.
-              </div>
-            </Form.Item>
-            <Button
-              icon={this.state.createPath.loading ? "loading" : undefined}
-              style={{
-                float: "right"
-              }}
-              size="large"
-              type="primary"
-              disabled={
-                this.state.createPath.sheetName.length === 0 ||
-                this.state.createPath.loading
-              }
-              onClick={() =>
-                this.exportNew(
-                  this.state.createPath.sheetName,
-                  this.state.createPath.includeHeader
-                )
-              }
-            >
-              Export
-            </Button>
-          </Row>
-        </Form>
-        <Divider />
-        <Row style={{ margin: "5em 0em 1.5em" }}>
-          <Title style={{ color: "rgb(89, 89, 89" }} level={3}>
-            Update an existing spreadsheet
-          </Title>
-        </Row>
-        <Form>
-          <Row style={{ width: "70%", margin: "0 auto" }} justify="center">
-            <Col>
-              <div
-                style={{ fontSize: 18, fontWeight: 500, marginBottom: "0.5em" }}
-              >
-                Spreadsheet ID
-              </div>
-              <div
-                style={{ fontSize: 16, fontWeight: 400, marginBottom: "1.5em" }}
-              >
-                The{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id"
-                >
-                  spreadsheet ID
-                </a>{" "}
-                of the spreadsheet to update. Must be a spreadsheet you have
-                edit access to.
-              </div>
-              <Form.Item
-                validateStatus={
-                  this.state.updatePath.errors.spreadsheetId !== undefined
-                    ? "error"
-                    : ""
-                }
-                help={this.state.updatePath.errors.spreadsheetId}
-                style={{
-                  marginBottom: "2em"
-                }}
-              >
-                <Input
-                  size="large"
-                  value={this.state.updatePath.spreadsheetId}
-                  placeholder="110u29tNeFE_u-Q-D53MvPd_m-sYO-1LzT2Ly_B1MRL4"
-                  style={{ fontWeight: 500 }}
-                  onChange={e =>
-                    this.setState({
-                      updatePath: {
-                        ...this.state.updatePath,
-                        spreadsheetId: e.target.value
-                      }
-                    })
-                  }
-                />
-              </Form.Item>
-
-              <div
-                style={{ fontSize: 18, fontWeight: 500, marginBottom: "0.5em" }}
-              >
-                Update location
-              </div>
-              <div
-                style={{ fontSize: 16, fontWeight: 400, marginBottom: "1.5em" }}
-              >
-                The location to start updating from, in{" "}
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href="https://developers.google.com/sheets/api/guides/concepts#a1_notation"
-                >
-                  A1 notation.
-                </a>{" "}
-              </div>
-              <Form.Item
-                validateStatus={
-                  this.state.updatePath.errors.location !== undefined
-                    ? "error"
-                    : ""
-                }
-                help={this.state.updatePath.errors.location}
-                style={{
-                  marginBottom: "2em"
-                }}
-              >
-                <Input
-                  size="large"
-                  value={this.state.updatePath.location}
-                  placeholder="Sheet1!A1"
-                  style={{ fontWeight: 500 }}
-                  onChange={e =>
-                    this.setState({
-                      updatePath: {
-                        ...this.state.updatePath,
-                        location: e.target.value
-                      }
-                    })
-                  }
-                />
-              </Form.Item>
-              <Form.Item
-                style={{
-                  marginBottom: "4em"
-                }}
-              >
-                <Row type="flex" gutter={20}>
-                  <Col
+              <Form>
+                <Row>
+                  <Title
+                    style={{ color: "rgb(89, 89, 89", margin: "1em 0em 1.5em" }}
+                    level={3}
+                  >
+                    Create a new spreadsheet
+                  </Title>
+                </Row>
+                <Row style={{ width: "70%", margin: "0em auto 5em" }}>
+                  <div
                     style={{
                       fontSize: 18,
                       fontWeight: 500,
-                      marginBottom: "0.5em"
+                      margin: "0em 0em 0.5em"
                     }}
                   >
-                    Include header row
-                  </Col>
-                  <Col>
-                    <Switch
-                      checked={this.state.updatePath.includeHeader}
-                      onChange={checked =>
+                    Title
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 16,
+                      fontWeight: 400,
+                      marginBottom: "2em"
+                    }}
+                  >
+                    The name of the new spreadsheet.
+                  </div>
+                  <Form.Item
+                    style={{
+                      marginBottom: "3em"
+                    }}
+                  >
+                    <Input
+                      size="large"
+                      placeholder={`Committee Grading (${
+                        COMMITTEES[this.props.committee]
+                      })`}
+                      value={this.state.createPath.sheetName}
+                      style={{ fontWeight: 500 }}
+                      onChange={e => {
                         this.setState({
-                          updatePath: {
-                            ...this.state.updatePath,
-                            includeHeader: checked
+                          createPath: {
+                            ...this.state.createPath,
+                            sheetName: e.target.value
                           }
-                        })
-                      }
+                        });
+                      }}
                     />
+                  </Form.Item>
+                  <Form.Item style={{ marginBottom: "4em" }}>
+                    <Row type="flex" gutter={20}>
+                      <Col
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 500,
+                          marginBottom: "0.5em"
+                        }}
+                      >
+                        Include header row
+                      </Col>
+                      <Col>
+                        <Switch
+                          checked={this.state.createPath.includeHeader}
+                          onChange={checked =>
+                            this.setState({
+                              createPath: {
+                                ...this.state.createPath,
+                                includeHeader: checked
+                              }
+                            })
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <div style={{ fontSize: 16, fontWeight: 400 }}>
+                      Whether to include an extra header row with column names.
+                    </div>
+                  </Form.Item>
+                  <Button
+                    icon={this.state.createPath.loading ? "loading" : undefined}
+                    style={{
+                      float: "right"
+                    }}
+                    size="large"
+                    type="primary"
+                    disabled={
+                      this.state.createPath.sheetName.length === 0 ||
+                      this.state.createPath.loading
+                    }
+                    onClick={() =>
+                      this.exportNew(
+                        this.state.createPath.sheetName,
+                        this.state.createPath.includeHeader
+                      )
+                    }
+                  >
+                    Export
+                  </Button>
+                </Row>
+              </Form>
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${50 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Divider />
+            </animated.div>
+            <animated.div
+              style={{
+                transform: props.time.interpolate(
+                  time => `translateY(${75 * (1 - time)}px)`
+                ),
+                opacity: props.time
+              }}
+            >
+              <Row style={{ margin: "5em 0em 1.5em" }}>
+                <Title style={{ color: "rgb(89, 89, 89" }} level={3}>
+                  Update an existing spreadsheet
+                </Title>
+              </Row>
+              <Form>
+                <Row
+                  style={{ width: "70%", margin: "0 auto" }}
+                  justify="center"
+                >
+                  <Col>
+                    <div
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 500,
+                        marginBottom: "0.5em"
+                      }}
+                    >
+                      Spreadsheet ID
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginBottom: "1.5em"
+                      }}
+                    >
+                      The{" "}
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://developers.google.com/sheets/api/guides/concepts#spreadsheet_id"
+                      >
+                        spreadsheet ID
+                      </a>{" "}
+                      of the spreadsheet to update. Must be a spreadsheet you
+                      have edit access to.
+                    </div>
+                    <Form.Item
+                      validateStatus={
+                        this.state.updatePath.errors.spreadsheetId !== undefined
+                          ? "error"
+                          : ""
+                      }
+                      help={this.state.updatePath.errors.spreadsheetId}
+                      style={{
+                        marginBottom: "2em"
+                      }}
+                    >
+                      <Input
+                        size="large"
+                        value={this.state.updatePath.spreadsheetId}
+                        placeholder="110u29tNeFE_u-Q-D53MvPd_m-sYO-1LzT2Ly_B1MRL4"
+                        style={{ fontWeight: 500 }}
+                        onChange={e =>
+                          this.setState({
+                            updatePath: {
+                              ...this.state.updatePath,
+                              spreadsheetId: e.target.value
+                            }
+                          })
+                        }
+                      />
+                    </Form.Item>
+
+                    <div
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 500,
+                        marginBottom: "0.5em"
+                      }}
+                    >
+                      Update location
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginBottom: "1.5em"
+                      }}
+                    >
+                      The location to start updating from, in{" "}
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="https://developers.google.com/sheets/api/guides/concepts#a1_notation"
+                      >
+                        A1 notation.
+                      </a>
+                    </div>
+                    <Form.Item
+                      validateStatus={
+                        this.state.updatePath.errors.location !== undefined
+                          ? "error"
+                          : ""
+                      }
+                      help={this.state.updatePath.errors.location}
+                      style={{
+                        marginBottom: "2em"
+                      }}
+                    >
+                      <Input
+                        size="large"
+                        value={this.state.updatePath.location}
+                        placeholder="Sheet1!A1"
+                        style={{ fontWeight: 500 }}
+                        onChange={e =>
+                          this.setState({
+                            updatePath: {
+                              ...this.state.updatePath,
+                              location: e.target.value
+                            }
+                          })
+                        }
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      style={{
+                        marginBottom: "4em"
+                      }}
+                    >
+                      <Row type="flex" gutter={20}>
+                        <Col
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 500,
+                            marginBottom: "0.5em"
+                          }}
+                        >
+                          Include header row
+                        </Col>
+                        <Col>
+                          <Switch
+                            checked={this.state.updatePath.includeHeader}
+                            onChange={checked =>
+                              this.setState({
+                                updatePath: {
+                                  ...this.state.updatePath,
+                                  includeHeader: checked
+                                }
+                              })
+                            }
+                          />
+                        </Col>
+                      </Row>
+                      <div style={{ fontSize: 16, fontWeight: 400 }}>
+                        Whether to include an extra header row with column
+                        names.
+                      </div>
+                    </Form.Item>
+                    <Button
+                      icon={
+                        this.state.updatePath.loading ? "loading" : undefined
+                      }
+                      style={{
+                        float: "right"
+                      }}
+                      disabled={
+                        this.state.updatePath.loading ||
+                        this.state.updatePath.location.length === 0 ||
+                        this.state.updatePath.spreadsheetId.length === 0
+                      }
+                      onClick={() =>
+                        this.exportUpdate(
+                          this.state.updatePath.spreadsheetId,
+                          this.state.updatePath.location,
+                          this.state.updatePath.includeHeader
+                        )
+                      }
+                      size="large"
+                      type="primary"
+                    >
+                      Export
+                    </Button>
                   </Col>
                 </Row>
-                <div style={{ fontSize: 16, fontWeight: 400 }}>
-                  Whether to include an extra header row with column names.
-                </div>
-              </Form.Item>
-              <Button
-                icon={this.state.updatePath.loading ? "loading" : undefined}
-                style={{
-                  float: "right"
-                }}
-                disabled={
-                  this.state.updatePath.loading ||
-                  this.state.updatePath.location.length === 0 ||
-                  this.state.updatePath.spreadsheetId.length === 0
-                }
-                onClick={() =>
-                  this.exportUpdate(
-                    this.state.updatePath.spreadsheetId,
-                    this.state.updatePath.location,
-                    this.state.updatePath.includeHeader
-                  )
-                }
-                size="large"
-                type="primary"
-              >
-                Export
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      </Row>
+              </Form>
+            </animated.div>
+          </div>
+        )}
+      </Spring>
     );
   }
 }
