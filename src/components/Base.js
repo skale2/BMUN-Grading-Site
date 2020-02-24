@@ -69,7 +69,7 @@ const Base = props => {
                 </Menu.Item>
                 <Menu.Item key="delegations">
                   <Link to={`/${props.committee}/delegations`}>
-                    <Icon type="user" />
+                    <Icon type="team" />
                     Delegations
                   </Link>
                 </Menu.Item>
@@ -79,12 +79,12 @@ const Base = props => {
               <Tooltip
                 placement="bottom"
                 title={
-                  backend.getUser().name === "Soham Kale"
+                  backend.user.name === "Soham Kale"
                     ? "An absolute legend"
-                    : backend.getUser().name
+                    : backend.user.name
                 }
               >
-                <Avatar src={backend.getUser().avatarUrl} />
+                <Avatar src={backend.user.avatarUrl} />
               </Tooltip>
             </Col>
           </Row>

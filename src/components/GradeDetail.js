@@ -69,6 +69,7 @@ class GradeDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
+    backend.setCommittee(this.props.committee);
   }
 
   componentWillUnmount() {
@@ -85,7 +86,7 @@ class GradeDetail extends React.Component {
           this.state.score,
           this.state.tags,
           this.state.text,
-          backend.getUser().name
+          backend.user.name
         )
         .then(() => {
           message.success(`Edited ${this.props.delegation}!`);
@@ -99,7 +100,7 @@ class GradeDetail extends React.Component {
           this.state.score,
           this.state.tags,
           this.state.text,
-          backend.getUser().name
+          backend.user.name
         )
         .then(() => {
           message.success(`Graded ${this.props.delegation}!`);

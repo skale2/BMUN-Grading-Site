@@ -38,6 +38,10 @@ class Export extends React.Component {
     };
   }
 
+  componentDidMount() {
+    backend.setCommittee(this.props.committee);
+  }
+
   openInNewTab = url => {
     window.open(url, "_blank").blur();
     window.focus();

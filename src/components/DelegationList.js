@@ -3,7 +3,7 @@ import { Spring, animated, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
 import { Empty, Spin } from "antd";
 
-import { DELEGATIONS, UNMODERATED, SORTS } from "../constants";
+import { UNMODERATED, SORTS } from "../constants";
 
 import SearchBar from "./SearchBar";
 import SequenceButton from "./SequenceButton";
@@ -14,43 +14,41 @@ class DelegationList extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      delegations: DELEGATIONS[this.props.committee].slice(),
+      delegations: backend.committee.delegations.slice(),
       timesSpoken: {},
       highlighted: null
     };
 
-    for (const delegation of DELEGATIONS[this.props.committee]) {
+    for (const delegation of backend.committee.delegations) {
       this[delegation] = React.createRef();
     }
   }
 
   componentDidMount() {
-    backend.comments().then(result => {
-      let timesSpoken = {};
+    backend
+      .setCommittee(this.props.committee)
+      .then(backend.comments)
+      .then(result => {
+        let timesSpoken = {};
 
-      for (const delegation of DELEGATIONS[this.props.committee]) {
-        timesSpoken[delegation] = 0;
-      }
-
-      for (const row of result) {
-        if (row.type !== UNMODERATED) {
-          timesSpoken[row.delegation]++;
+        for (const delegation of backend.committee.delegations) {
+          timesSpoken[delegation] = 0;
         }
-      }
 
-      this.setState(
-        {
+        for (const row of result) {
+          if (row.type !== UNMODERATED) {
+            timesSpoken[row.delegation]++;
+          }
+        }
+
+        this.setState({
           timesSpoken: timesSpoken,
-          loading: false
-        },
-        () =>
-          this.setState({
-            delegations: this.state.delegations.sort(
-              this.sort(this.props.sortDelegationsBy)
-            )
-          })
-      );
-    });
+          loading: false,
+          delegations: backend.committee.delegations.sort(
+            this.sort(this.props.sortDelegationsBy)
+          )
+        });
+      });
   }
 
   dispatchUpdate = (delegations, emptyQuery) => {
@@ -98,7 +96,7 @@ class DelegationList extends React.Component {
     return (
       <div onKeyPress={this.handleKeyPress}>
         <SearchBar
-          values={DELEGATIONS[this.props.committee]}
+          values={backend.committee.delegations}
           dispatchUpdate={this.dispatchUpdate}
           placeHolder="Type in a delegation to get more details"
           defaultSort={this.props.sortDelegationsBy}

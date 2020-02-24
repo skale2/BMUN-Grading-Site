@@ -27,7 +27,6 @@ import {
   SPEECH_TYPES,
   CRISIS,
   SORTS,
-  CHAIRS
 } from "../constants";
 
 import backend from "../backend";
@@ -63,7 +62,10 @@ class DelegationDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    backend.status(this.props.delegation).then(this.setDelegationInfo);
+    backend
+      .setCommittee(this.props.committee)
+      .then(() => backend.status(this.props.delegation))
+      .then(this.setDelegationInfo);
   }
 
   setDelegationInfo = responses => {
@@ -459,7 +461,7 @@ class DelegationDetail extends React.Component {
                         }
                         allowClear
                       >
-                        {CHAIRS[this.props.committee].map((type, i) => (
+                        {backend.committee.chairs.map((type, i) => (
                           <Option key={i} value={type}>
                             {type}
                           </Option>

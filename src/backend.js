@@ -1,18 +1,13 @@
 import moment from "moment";
 import { message } from "antd";
-import {
-  API_KEY,
-  CLIENT_ID,
-  SPEECH_TYPES,
-  COMMITTEES,
-  COMMITTEE_BACKENDS
-} from "./constants";
+import { API_KEY, CLIENT_ID, SPEECH_TYPES, COMMITTEES } from "./constants";
 
 const DISCOVERY_DOCS = [
-  "https://sheets.googleapis.com/$discovery/rest?version=v4"
+  "https://sheets.googleapis.com/$discovery/rest?version=v4",
+  "https://docs.googleapis.com/$discovery/rest?version=v1"
 ];
 const SCOPE =
-  "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets";
+  "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/documents.readonly";
 
 function rowToObject(row, i) {
   return {
@@ -31,14 +26,18 @@ class Backend {
   constructor() {
     this.isReady = false;
     this.auth = undefined;
-    this.spreadsheetId = undefined;
-    this.committee = undefined;
-    this.delegations = undefined;
     this.isReadyCallbacks = [];
     this.user = {
       name: undefined,
       email: undefined,
       avatarUrl: undefined
+    };
+    this.committee = {
+      shortName: undefined,
+      name: undefined,
+      sheet: undefined,
+      delegations: [],
+      chairs: []
     };
 
     window.gapi.load("client:auth2", this.initClient);
@@ -69,8 +68,6 @@ class Backend {
           for (let callback of this.isReadyCallbacks) {
             callback();
           }
-
-          console.log(this.user);
         },
         error => console.log(error)
       );
@@ -84,30 +81,52 @@ class Backend {
   };
 
   setCommittee = committee => {
-    if (committee !== this.committee) {
-      if (!Object.keys(COMMITTEES).includes(committee))
-        console.error(`Unknown committee: ${committee}`);
+    if (committee === this.committee.shortName) return Promise.resolve();
 
-      this.committee = committee;
-      this.spreadsheetId = COMMITTEE_BACKENDS[committee];
+    if (!Object.keys(COMMITTEES).includes(committee)) {
+      console.error(`Unknown committee: ${committee}`);
+      message.error("We're having some issues on our end...");
+      return Promise.reject();
     }
-  };
 
-  getUser = () => {
-    return this.user;
+    return window.gapi.client.docs.documents
+      .get({
+        documentId: "1YQSUDVO4LTaJgdiTE28rArk73SD1Kxbm2zW-kzO2EYQ"
+      })
+      .then(
+        response => {
+          let content = "";
+
+          for (let text of response.result.body.content) {
+            if (text.paragraph !== undefined) {
+              for (let element of text.paragraph.elements) {
+                content += element.textRun.content;
+              }
+            }
+          }
+
+          let config = JSON.parse(content);
+          this.committee = config[committee];
+          this.committee.shortName = committee;
+        },
+        error => {
+          console.error(error);
+          message.error("We're having some issues on our end...");
+        }
+      );
   };
 
   comments = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
-    } else if (this.spreadsheetId === undefined) {
+    } else if (this.committee === undefined) {
       console.error("Committee not defined");
       message.error("We're having some issues on our end...");
     }
 
     return window.gapi.client.sheets.spreadsheets.values
       .get({
-        spreadsheetId: this.spreadsheetId,
+        spreadsheetId: this.committee.sheet,
         range: "Sheet1!A:G",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
@@ -133,7 +152,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .append(
         {
-          spreadsheetId: this.spreadsheetId,
+          spreadsheetId: this.committee.sheet,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           insertDataOption: "INSERT_ROWS",
@@ -174,7 +193,7 @@ class Backend {
     return window.gapi.client.sheets.spreadsheets.values
       .update(
         {
-          spreadsheetId: this.spreadsheetId,
+          spreadsheetId: this.committee.sheet,
           includeGridData: false,
           valueInputOption: "USER_ENTERED",
           range: `Sheet1!A${row + 1}:G${row + 1}`
@@ -211,7 +230,7 @@ class Backend {
 
     return window.gapi.client.sheets.spreadsheets.values
       .get({
-        spreadsheetId: this.spreadsheetId,
+        spreadsheetId: this.committee.sheet,
         range: "Sheet1!A:G",
         dateTimeRenderOption: "FORMATTED_STRING",
         majorDimension: "ROWS",
@@ -237,7 +256,7 @@ class Backend {
     }
 
     return window.gapi.client.sheets.spreadsheets.batchUpdate(
-      { spreadsheetId: this.spreadsheetId },
+      { spreadsheetId: this.committee.sheet },
       {
         requests: [
           {
