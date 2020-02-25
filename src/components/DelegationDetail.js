@@ -26,7 +26,7 @@ import {
   TAGS,
   SPEECH_TYPES,
   CRISIS,
-  SORTS,
+  SORTS
 } from "../constants";
 
 import backend from "../backend";
@@ -512,20 +512,64 @@ class DelegationDetail extends React.Component {
                 </Col>
               </Row>
             </animated.div>
+
             <Row style={{ marginTop: "2em" }}>
               {this.state.displayedComments.length === 0 ? (
-                <Empty description="No comments yet! Did you try a different set of filters?" />
+                <animated.div
+                  style={{
+                    transform: props.time.interpolate(
+                      time => `translateY(${150 * (1 - time)}px)`
+                    ),
+                    opacity: props.time
+                  }}
+                >
+                  <Empty description="No comments yet! Did you try a different set of filters?" />
+                </animated.div>
               ) : (
                 <div>
                   <Col span={12}>
                     {this.state.displayedComments
                       .filter((_, i) => i % 2 === 0)
-                      .map((comment, i) => this.commentRender(comment, i))}
+                      .map((comment, i) =>
+                        /* Some stuff to avoid animating comments not on screen. */
+                        i < (window.innerHeight - 700) / 100 ? ( 
+                          <animated.div
+                            style={{
+                              transform: props.time.interpolate(
+                                time =>
+                                  `translateY(${(150 + 25 * i) * (1 - time)}px)`
+                              ),
+                              opacity: props.time
+                            }}
+                          >
+                            {this.commentRender(comment, i)}
+                          </animated.div>
+                        ) : (
+                          this.commentRender(comment, i)
+                        )
+                      )}
                   </Col>
                   <Col span={12}>
                     {this.state.displayedComments
                       .filter((_, i) => i % 2 === 1)
-                      .map((comment, i) => this.commentRender(comment, i))}
+                      .map((comment, i) =>
+                        /* Some stuff to avoid animating comments not on screen. */
+                        i < (window.innerHeight - 700) / 100 ? (
+                          <animated.div
+                            style={{
+                              transform: props.time.interpolate(
+                                time =>
+                                  `translateY(${(150 + 25 * i) * (1 - time)}px)`
+                              ),
+                              opacity: props.time
+                            }}
+                          >
+                            {this.commentRender(comment, i)}
+                          </animated.div>
+                        ) : (
+                          this.commentRender(comment, i)
+                        )
+                      )}
                   </Col>
                 </div>
               )}
