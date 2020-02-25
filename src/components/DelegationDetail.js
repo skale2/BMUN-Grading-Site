@@ -219,7 +219,14 @@ class DelegationDetail extends React.Component {
               color: comment.text.length > 0 ? "#363636" : "#a5a5a5"
             }}
           >
-            {comment.text.length > 0 ? comment.text : "No comment"}
+            {comment.text.length > 0
+              ? comment.text
+                  .trim()
+                  .split("\n")
+                  .map((item, i) => {
+                    return <p key={i}>{item}</p>;
+                  })
+              : "No comment"}
           </div>
           {comment.tags.length > 0 ? (
             <div style={{ marginTop: "2em" }}>
