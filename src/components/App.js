@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Result } from "antd";
+import { Button, Result, Spin } from "antd";
 import { Link } from "react-router-dom";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
@@ -9,11 +9,8 @@ import GradeDetail from "./GradeDetail";
 import DelegationList from "./DelegationList";
 import DelegationDetail from "./DelegationDetail";
 import Export from "./Export";
-
-import { Spin } from "antd";
 import Welcome from "./Welcome";
-import { COMMITTEES, SORTS } from "../constants";
-
+import { SORTS } from "../constants";
 import backend from "../backend";
 
 class App extends React.Component {
@@ -21,24 +18,27 @@ class App extends React.Component {
     super(props);
     this.state = {
       backendIsReady: false,
+      backendIsSignedIn: false,
       sortDelegationsBy: SORTS.a_z,
       sortCommentsBy: SORTS.latest_first
     };
-    backend.isReadyCallbacks.push(this.backendReady);
+
+    backend.isReadyCallBacks.push(() => this.setState({
+      backendIsReady: true
+    }));
+
+    backend.isSignedInCallBacks.push(() => this.setState({
+      backendIsSignedIn: true
+    }));
   }
 
-  backendReady = () => {
-    this.setState({ backendIsReady: true });
-  };
-
   render() {
-    if (!this.state.backendIsReady) {
+    if (!this.state.backendIsReady)
       return (
         <div style={{ width: "1em", margin: "25% auto 0%" }}>
           <Spin size="large" />
         </div>
       );
-    }
 
     return (
       <div>
@@ -53,15 +53,17 @@ class App extends React.Component {
                 },
                 location: { pathname }
               }) => {
-                if (!backend.isReady)
+                if (!this.state.backendIsSignedIn)
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
                     />
                   );
 
-                if (!Object.keys(COMMITTEES).includes(committee))
+                if (!Object.keys(backend.committees).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="grade" committee={committee}>
@@ -81,15 +83,19 @@ class App extends React.Component {
                 },
                 location: { pathname }
               }) => {
-                if (!backend.isReady)
+                if (!this.state.backendIsSignedIn) {
+                  console.log("whoops")
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
                     />
                   );
+                }
 
-                if (!Object.keys(COMMITTEES).includes(committee))
+                if (!Object.keys(backend.committees).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="grade" committee={committee}>
@@ -112,14 +118,14 @@ class App extends React.Component {
                 },
                 location: { pathname }
               }) => {
-                if (!backend.isReady)
+                if (!this.state.backendIsSignedIn)
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
                     />
                   );
 
-                if (!Object.keys(COMMITTEES).includes(committee))
+                if (!Object.keys(backend.committees).includes(committee))
                   return <Redirect to="/not_found" />;
 
                 backend.setCommittee(committee);
@@ -146,15 +152,17 @@ class App extends React.Component {
                 },
                 location: { pathname }
               }) => {
-                if (!backend.isReady)
+                if (!this.state.backendIsSignedIn)
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
                     />
                   );
 
-                if (!Object.keys(COMMITTEES).includes(committee))
+                if (!Object.keys(backend.committees).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="delegations" committee={committee}>
@@ -177,15 +185,17 @@ class App extends React.Component {
                 },
                 location: { pathname }
               }) => {
-                if (!backend.isReady)
+                if (!this.state.backendIsSignedIn)
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
                     />
                   );
 
-                if (!Object.keys(COMMITTEES).includes(committee))
+                if (!Object.keys(backend.committees).includes(committee))
                   return <Redirect to="/not_found" />;
+
+                backend.setCommittee(committee);
 
                 return (
                   <Base page="export" committee={committee}>

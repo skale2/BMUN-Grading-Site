@@ -1,22 +1,24 @@
-import {
-  COMMITTEES,
-  API_KEY,
-  CLIENT_ID,
-} from "./config";
+/**
+ * Google OAuth API key, used to identify the application with the Sheets API.
+ * See https://cloud.google.com/docs/authentication/api-keys.
+ */
+export const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
 
-let COMMITTEES_REVERSE = {};
-for (const key in COMMITTEES) {
-  COMMITTEES_REVERSE[COMMITTEES[key]] = key;
-}
+/**
+ * Google OAuth Client ID, used to authenticate the end user.
+ * See https://cloud.google.com/docs/authentication/end-user
+ */
+export const CLIENT_ID =
+  "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
 
-const SPEAKERS_LIST = "Speaker's List";
-const MODERATED = "Moderated";
-const UNMODERATED = "Unmoderated";
-const FORMAL = "Formal";
-const COMMENT = "Comment";
-const CRISIS = "Crisis";
+export const SPEAKERS_LIST = "Speaker's List";
+export const MODERATED = "Moderated";
+export const UNMODERATED = "Unmoderated";
+export const FORMAL = "Formal";
+export const COMMENT = "Comment";
+export const CRISIS = "Crisis";
 
-const SPEECH_TYPES = [
+export const SPEECH_TYPES = [
   SPEAKERS_LIST,
   MODERATED,
   UNMODERATED,
@@ -25,7 +27,7 @@ const SPEECH_TYPES = [
   CRISIS
 ];
 
-const TAGS = [
+export const TAGS = [
   "Great Points",
   "Convincing Speaker",
   "Good Body Language",
@@ -44,7 +46,7 @@ const TAGS = [
   "Makes Connections"
 ];
 
-const SORTS = {
+export const SORTS = {
   a_z: "A-Z",
   z_a: "Z-A",
   spoken_most: "Spoken most",
@@ -53,20 +55,4 @@ const SORTS = {
   earliest_first: "Earliest first",
   highest_score: "Highest score",
   lowest_score: "Lowest score"
-};
-
-export {
-  COMMITTEES,
-  COMMITTEES_REVERSE,
-  SPEAKERS_LIST,
-  MODERATED,
-  UNMODERATED,
-  FORMAL,
-  COMMENT,
-  CRISIS,
-  TAGS,
-  SPEECH_TYPES,
-  SORTS,
-  API_KEY,
-  CLIENT_ID
 };

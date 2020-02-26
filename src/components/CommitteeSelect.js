@@ -3,18 +3,21 @@ import { withRouter } from "react-router-dom";
 import { Empty } from "antd";
 import SearchBar from "./SearchBar";
 import SequenceButton from "./SequenceButton";
-import { COMMITTEES, COMMITTEES_REVERSE } from "../constants";
+
+import backend from "../backend";
 
 class CommitteeSelect extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      committees: Object.values(COMMITTEES),
+      committees: Object.values(backend.committees).map(
+        committee => committee.name
+      ),
       highlighted: null
     };
 
-    for (var i = 0; i < Object.values(COMMITTEES).length; i++) {
-      this[Object.keys(COMMITTEES)[i]] = React.createRef();
+    for (var i = 0; i < Object.values(backend.committees).length; i++) {
+      this[Object.keys(backend.committees)[i]] = React.createRef();
     }
   }
 
@@ -27,7 +30,10 @@ class CommitteeSelect extends React.Component {
 
   handleKeyPress = e => {
     if (e.key === "Enter" && this.state.highlighted) {
-      this.props.gotoCommittee(this.state.highlighted);
+      console.log(this.state.highlighted)
+      this.props.history.push(
+        `/${backend.committeeByFullName(this.state.highlighted)}/grade`
+      );
     }
   };
 
@@ -39,7 +45,9 @@ class CommitteeSelect extends React.Component {
       >
         <SearchBar
           style={{ width: 600 }}
-          values={Object.values(COMMITTEES)}
+          values={Object.values(backend.committees).map(
+            committee => committee.name
+          )}
           dispatchUpdate={this.dispatchUpdate}
           placeHolder="What committee are you on?"
         />
@@ -54,7 +62,7 @@ class CommitteeSelect extends React.Component {
           ) : (
             this.state.committees.map((name, i) => (
               <SequenceButton
-                href={`/${COMMITTEES_REVERSE[name]}/grade`}
+                href={`/${backend.committeeByFullName(name)}/grade`}
                 highlighted={i === 0 && this.state.highlighted !== null}
                 type="grade"
                 ref={this[name]}

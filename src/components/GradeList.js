@@ -25,9 +25,7 @@ class GradeList extends React.Component {
   }
 
   componentDidMount() {
-    backend
-      .setCommittee(this.props.committee)
-      .then(backend.comments)
+    backend.comments()
       .then(result => {
         let timesSpoken = {};
 
@@ -121,7 +119,7 @@ class GradeList extends React.Component {
               {props =>
                 this.state.delegations.map((name, i) =>
                   /* To only animate the buttons on screen. */
-                  i < window.innerHeight / 150 ? (
+                  i < window.innerHeight / 100 ? (
                     <animated.div
                       style={{
                         transform: props.time.interpolate(

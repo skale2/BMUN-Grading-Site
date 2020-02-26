@@ -23,7 +23,6 @@ import {
   UNMODERATED,
   FORMAL,
   COMMENT,
-  TAGS,
   SPEECH_TYPES,
   CRISIS,
   SORTS
@@ -51,6 +50,7 @@ class DelegationDetail extends React.Component {
         [CRISIS]: 0
       },
       tags: {},
+      showAllTags: false,
       comments: [],
       displayedComments: [],
       authorIs: undefined,
@@ -62,9 +62,7 @@ class DelegationDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    backend
-      .setCommittee(this.props.committee)
-      .then(() => backend.status(this.props.delegation))
+    backend.status(this.props.delegation)
       .then(this.setDelegationInfo);
   }
 
@@ -88,12 +86,8 @@ class DelegationDetail extends React.Component {
       }
       spoken[response.type] += 1;
 
-      for (const tag in response.tags) {
-        if (!(TAGS[tag] in tags)) {
-          tags[TAGS[tag]] = 1;
-        } else {
-          tags[TAGS[tag]]++;
-        }
+      for (let tag of response.tags) {
+        tags[tag] = tag in tags ? tags[tag] + 1 : 1;
       }
     });
 
@@ -178,14 +172,14 @@ class DelegationDetail extends React.Component {
         <Card
           title={
             <Row type="flex" align="middle" justify="space-between">
-              <Col span={8}>
+              <Col>
                 <Statistic
                   title={comment.type}
                   value={comment.score}
                   suffix="/10"
                 />
               </Col>
-              <Col span={5}>
+              <Col>
                 <Row type="flex" align="middle" justify="space-between">
                   <Col style={{ fontSize: "20px", fontWeight: "600" }}>
                     <Link
@@ -205,7 +199,12 @@ class DelegationDetail extends React.Component {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <Button icon="delete" shape="circle" type="danger" />
+                      <Button
+                        icon="delete"
+                        shape="circle"
+                        type="danger"
+                        style={{ marginLeft: 8 }}
+                      />
                     </Popconfirm>
                   </Col>
                 </Row>
@@ -432,11 +431,27 @@ class DelegationDetail extends React.Component {
                         ([, frequency1], [, frequency2]) =>
                           frequency2 - frequency1
                       )
+                      .slice(
+                        0,
+                        this.state.showAllTags ? this.state.tags.length : 5
+                      )
                       .map(([tag, frequency], i) => (
                         <Tag style={tagStyle} key={i}>
                           {`${tag} (${frequency})`}
                         </Tag>
                       ))}
+                    {this.state.tags.length > 5 ? (
+                      <Button
+                        type="link"
+                        onClick={() =>
+                          this.setState({
+                            showAllTags: !this.state.showAllTags
+                          })
+                        }
+                      >
+                        {this.state.showAllTags ? "show less" : "show more"}
+                      </Button>
+                    ) : null}
                   </Row>
                 </Row>
               </animated.div>
@@ -539,7 +554,7 @@ class DelegationDetail extends React.Component {
                       .filter((_, i) => i % 2 === 0)
                       .map((comment, i) =>
                         /* Some stuff to avoid animating comments not on screen. */
-                        i < (window.innerHeight - 700) / 100 ? ( 
+                        i < (window.innerHeight - 700) / 100 ? (
                           <animated.div
                             style={{
                               transform: props.time.interpolate(

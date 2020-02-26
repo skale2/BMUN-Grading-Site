@@ -11,7 +11,6 @@ import {
   Form,
   message
 } from "antd";
-import { COMMITTEES } from "../constants";
 import backend from "../backend";
 
 const { Title } = Typography;
@@ -21,7 +20,7 @@ class Export extends React.Component {
     super(props);
     this.state = {
       createPath: {
-        sheetName: `Committee Grading (${COMMITTEES[props.committee]})`,
+        sheetName: `Committee Grading (${backend.committees[props.committee].name})`,
         includeHeader: true,
         loading: false
       },
@@ -36,10 +35,6 @@ class Export extends React.Component {
         }
       }
     };
-  }
-
-  componentDidMount() {
-    backend.setCommittee(this.props.committee);
   }
 
   openInNewTab = url => {
@@ -205,7 +200,7 @@ class Export extends React.Component {
                     <Input
                       size="large"
                       placeholder={`Committee Grading (${
-                        COMMITTEES[this.props.committee]
+                        backend.committees[this.props.committee].name
                       })`}
                       value={this.state.createPath.sheetName}
                       style={{ fontWeight: 500 }}

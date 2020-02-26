@@ -25,9 +25,7 @@ class DelegationList extends React.Component {
   }
 
   componentDidMount() {
-    backend
-      .setCommittee(this.props.committee)
-      .then(backend.comments)
+    backend.comments()
       .then(result => {
         let timesSpoken = {};
 
@@ -120,7 +118,8 @@ class DelegationList extends React.Component {
             >
               {props =>
                 this.state.delegations.map((name, i) =>
-                  i < window.innerHeight / 150 ? (
+                  /* To only animate the buttons on screen. */
+                  i < window.innerHeight / 100 ? (
                     <animated.div
                       key={i}
                       style={{

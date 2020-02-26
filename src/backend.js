@@ -1,37 +1,34 @@
 import moment from "moment";
 import { message } from "antd";
-import { API_KEY, CLIENT_ID, SPEECH_TYPES, COMMITTEES } from "./constants";
+import { API_KEY, CLIENT_ID, SPEECH_TYPES } from "./constants";
 
 const DISCOVERY_DOCS = [
   "https://sheets.googleapis.com/$discovery/rest?version=v4",
   "https://docs.googleapis.com/$discovery/rest?version=v1"
 ];
 const SCOPE =
-  "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/documents.readonly";
-
-function rowToObject(row, i) {
-  return {
-    row: i,
-    date: new Date(parseInt(row[0])),
-    delegation: row[1],
-    type: SPEECH_TYPES[parseInt(row[2])],
-    score: parseInt(row[3]),
-    tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
-    text: row[5] !== undefined ? row[5] : "",
-    author: row[6]
-  };
-}
+  "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file " +
+  "https://www.googleapis.com/auth/spreadsheets " +
+  "https://www.googleapis.com/auth/documents.readonly";
 
 class Backend {
   constructor() {
-    this.isReady = false;
     this.auth = undefined;
-    this.isReadyCallbacks = [];
+
+    this.isReady = false;
+    this.isReadyCallBacks = [];
+
+    this.isSignedIn = false;
+    this.isSignedInCallBacks = [];
+
+    this.committees = {};
+
     this.user = {
       name: undefined,
       email: undefined,
       avatarUrl: undefined
     };
+
     this.committee = {
       shortName: undefined,
       name: undefined,
@@ -40,10 +37,10 @@ class Backend {
       chairs: []
     };
 
-    window.gapi.load("client:auth2", this.initClient);
+    window.gapi.load("client:auth2", this._initClient);
   }
 
-  initClient = () => {
+  _initClient = () => {
     window.gapi.client
       .init({
         clientId: CLIENT_ID,
@@ -54,66 +51,111 @@ class Backend {
       .then(
         () => {
           this.auth = window.gapi.auth2.getAuthInstance();
-          this.isReady = this.auth.isSignedIn.get();
 
-          let basicProfile = this.auth.currentUser.je.getBasicProfile();
-
-          /* I'm not sure if this is how you're supposed to use this... */
-          this.user = {
-            name: basicProfile.Ad,
-            email: basicProfile.zu,
-            avatarUrl: basicProfile.UK
-          };
-
-          for (let callback of this.isReadyCallbacks) {
-            callback();
+          if (this.auth.isSignedIn.get()) {
+            this._fetchCommittees()
+              .then(this._fetchUser)
+              .then(() => {
+                this.isReady = true;
+                for (let callback of this.isReadyCallBacks) callback();
+                this.isSignedIn = true;
+                for (let callback of this.isSignedInCallBacks) callback();
+              });
+          }
+          
+          else {
+            this.isReady = true;
+            for (let callback of this.isReadyCallBacks) callback();
           }
         },
-        error => console.log(error)
+        error => {
+          message.error("We're having some issues on our end...");
+          console.log(error);
+        }
       );
   };
 
+  _reportError = error => {
+    message.error("We're having some issues on our end...");
+    console.log(error);
+  };
+
+  _fetchUser = () => {
+    let basicProfile = this.auth.currentUser.je.getBasicProfile();
+
+    /* I'm not sure if this is how you're supposed to use this... */
+    this.user = {
+      name: basicProfile.Ad,
+      email: basicProfile.zu,
+      avatarUrl: basicProfile.UK
+    };
+
+    return Promise.resolve();
+  };
+
+  _fetchCommittees = () => {
+    return window.gapi.client.docs.documents
+      .get({
+        documentId: "1YQSUDVO4LTaJgdiTE28rArk73SD1Kxbm2zW-kzO2EYQ"
+      })
+      .then(response => {
+        let content = "";
+
+        for (let text of response.result.body.content) {
+          if (text.paragraph !== undefined) {
+            for (let element of text.paragraph.elements) {
+              content += element.textRun.content;
+            }
+          }
+        }
+
+        this.committees = JSON.parse(content);
+      }, this._reportError);
+  };
+
+  _rowToObject = (row, i) => {
+    return {
+      row: i,
+      date: new Date(parseInt(row[0])),
+      delegation: row[1],
+      type: SPEECH_TYPES[parseInt(row[2])],
+      score: parseInt(row[3]),
+      tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
+      text: row[5] !== undefined ? row[5] : "",
+      author: row[6]
+    };
+  };
+
+  committeeByFullName = committee => {
+    return Object.keys(this.committees).find(
+      shortname => this.committees[shortname].name === committee
+    );
+  };
+
   signIn = () => {
-    return this.auth.signIn().then(result => {
-      this.isReady = true;
-      return result;
-    });
+    return this.auth
+      .signIn()
+      .then(this._fetchCommittees)
+      .then(this._fetchUser)
+      .then(result => {
+        this.isSignedIn = true;
+        for (let callback of this.isSignedInCallBacks) callback();
+
+        return result;
+      }, this._reportError);
   };
 
   setCommittee = committee => {
-    if (committee === this.committee.shortName) return Promise.resolve();
-
-    if (!Object.keys(COMMITTEES).includes(committee)) {
+    if (!Object.keys(this.committees).includes(committee)) {
       console.error(`Unknown committee: ${committee}`);
       message.error("We're having some issues on our end...");
       return Promise.reject();
     }
 
-    return window.gapi.client.docs.documents
-      .get({
-        documentId: "1YQSUDVO4LTaJgdiTE28rArk73SD1Kxbm2zW-kzO2EYQ"
-      })
-      .then(
-        response => {
-          let content = "";
+    if (committee !== this.committee.shortName)
+      this.committee = this.committees[committee];
 
-          for (let text of response.result.body.content) {
-            if (text.paragraph !== undefined) {
-              for (let element of text.paragraph.elements) {
-                content += element.textRun.content;
-              }
-            }
-          }
-
-          let config = JSON.parse(content);
-          this.committee = config[committee];
-          this.committee.shortName = committee;
-        },
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
-      );
+    return Promise.resolve();
   };
 
   comments = () => {
@@ -136,11 +178,8 @@ class Backend {
         response =>
           response.result.values === undefined
             ? []
-            : response.result.values.map(rowToObject),
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
+            : response.result.values.map(this._rowToObject),
+        this._reportError
       );
   };
 
@@ -174,13 +213,7 @@ class Backend {
           ]
         }
       )
-      .then(
-        response => response,
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
-      );
+      .then(response => response, this._reportError);
   };
 
   edit = (row, delegation, type, score, tags, text, author) => {
@@ -214,13 +247,7 @@ class Backend {
           ]
         }
       )
-      .then(
-        response => response,
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
-      );
+      .then(response => response, this._reportError);
   };
 
   status = delegation => {
@@ -241,12 +268,9 @@ class Backend {
           response.result.values === undefined
             ? []
             : response.result.values
-                .map(rowToObject)
+                .map(this._rowToObject)
                 .filter(row => row.delegation === delegation),
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
+        this._reportError
       );
   };
 
@@ -344,13 +368,7 @@ class Backend {
           comments
         ]);
       })
-      .then(
-        ([_, spreadsheet, __]) => spreadsheet,
-        error => {
-          console.error(error);
-          message.error("We're having some issues on our end...");
-        }
-      );
+      .then(([, spreadsheet]) => spreadsheet, this._reportError);
   };
 
   exportUpdate = (spreadsheetId, location, includeHeader) => {
@@ -366,9 +384,7 @@ class Backend {
     }
 
     return this.comments().then(comments => {
-      let [_, sheetName, column, row] = location.match(
-        /(.+?)!([A-Z])([0-9]+)/i
-      );
+      let [, sheetName, column, row] = location.match(/(.+?)!([A-Z])([0-9]+)/i);
 
       let range = `${sheetName}!${column}${row}:${String.fromCharCode(
         column.charCodeAt(0) + 6

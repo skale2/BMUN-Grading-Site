@@ -4,37 +4,36 @@ import { withRouter } from "react-router-dom";
 import { Row, Button } from "antd";
 import backend from "../backend";
 import CommitteeSelect from "./CommitteeSelect";
-import { COMMITTEES_REVERSE } from "../constants";
 
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      step: backend.isReady ? 1 : 0,
-      clientLoaded: backend.isReady
+      step: backend.isSignedIn ? 1 : 0,
+      backendIsReady: backend.isReady
     };
-    backend.isReadyCallbacks.push(this.onBackendLoaded);
-  }
+    
+    backend.isReadyCallBacks.push(() =>
+      this.setState({ backendIsReady: true })
+    );
 
-  onBackendLoaded = () => {
-    this.setState({ clientLoaded: true });
-  };
+    backend.isSignedInCallBacks.push(() =>
+      this.setState({ step: 1 })
+    );
+  }
 
   signIn = () => {
     backend.signIn().then(() => {
       if (this.props.location.state !== undefined) {
         this.props.history.push(this.props.location.state.from);
       } else {
-        this.setState({
-          step: 1
-        });
+        this.setState({ step: 1 });
       }
     });
   };
 
   gotoCommittee = committee => {
-    backend.setCommittee(committee);
-    this.props.history.push(`/${COMMITTEES_REVERSE[committee]}/grade`);
+    this.props.history.push(`/${backend.committeeByFullName(committee)}/grade`);
   };
 
   render() {
@@ -66,10 +65,10 @@ class Welcome extends React.Component {
               >
                 <Row type="flex" justify="center">
                   <Button
-                    icon={!this.state.clientLoaded ? "loading" : "google"}
+                    icon={!this.state.backendIsReady ? "loading" : "google"}
                     type="primary"
                     size={"large"}
-                    disabled={!this.state.clientLoaded}
+                    disabled={!this.state.backendIsReady}
                     onClick={this.signIn}
                   >
                     Sign in with BMUN

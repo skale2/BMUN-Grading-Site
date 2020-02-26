@@ -3,14 +3,13 @@ import React from "react";
 import { Layout, Menu, Icon, Row, Col, Tooltip, Avatar } from "antd";
 import { Link } from "react-router-dom";
 
-import { COMMITTEES } from "../constants";
 import backend from "../backend";
 
 const { Content } = Layout;
 
 const Base = props => {
   return (
-    <Layout style={{ margin: "2% 7%", background: "white" }}>
+    <Layout style={{ maxWidth: 1500, margin: "2% auto", background: "white" }}>
       <Row
         type="flex"
         style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}
@@ -18,7 +17,7 @@ const Base = props => {
         <Col>
           <Link to="/welcome">
             <Tooltip placement="bottom" title="← Select another committee">
-              {COMMITTEES[props.committee].toUpperCase()}
+              {backend.committees[props.committee].name.toUpperCase()}
             </Tooltip>
           </Link>
         </Col>

@@ -69,7 +69,6 @@ class GradeDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    backend.setCommittee(this.props.committee);
   }
 
   componentWillUnmount() {
