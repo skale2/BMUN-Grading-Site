@@ -9,7 +9,7 @@ const { Content } = Layout;
 
 const Base = props => {
   return (
-    <Layout style={{ maxWidth: 1500, margin: "2% auto", background: "white" }}>
+    <Layout style={{ maxWidth: 1200, margin: "2% auto", background: "white" }}>
       <Row
         type="flex"
         style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}
