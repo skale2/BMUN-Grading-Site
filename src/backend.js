@@ -1,13 +1,14 @@
 import moment from "moment";
 import { message } from "antd";
-import { API_KEY, CLIENT_ID, SPEECH_TYPES } from "./constants";
+import { CLIENT_ID, SPEECH_TYPES } from "./constants";
 
 const DISCOVERY_DOCS = [
   "https://sheets.googleapis.com/$discovery/rest?version=v4",
   "https://docs.googleapis.com/$discovery/rest?version=v1"
 ];
 const SCOPE =
-  "https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file " +
+  "https://www.googleapis.com/auth/drive " + 
+  "https://www.googleapis.com/auth/drive.file " +
   "https://www.googleapis.com/auth/spreadsheets " +
   "https://www.googleapis.com/auth/documents.readonly";
 
@@ -46,7 +47,6 @@ class Backend {
         clientId: CLIENT_ID,
         scope: SCOPE,
         discoveryDocs: DISCOVERY_DOCS,
-        apiKey: API_KEY
       })
       .then(
         () => {
@@ -56,14 +56,13 @@ class Backend {
             this._fetchCommittees()
               .then(this._fetchUser)
               .then(() => {
-                this.isReady = true;
-                for (let callback of this.isReadyCallBacks) callback();
                 this.isSignedIn = true;
                 for (let callback of this.isSignedInCallBacks) callback();
+
+                this.isReady = true;
+                for (let callback of this.isReadyCallBacks) callback();
               });
-          }
-          
-          else {
+          } else {
             this.isReady = true;
             for (let callback of this.isReadyCallBacks) callback();
           }
@@ -75,9 +74,9 @@ class Backend {
       );
   };
 
-  _reportError = error => {
-    message.error("We're having some issues on our end...");
-    console.log(error);
+  _reportError = (consoleError, windowError) => {
+    console.log(consoleError);
+    message.error(windowError || "We're having some issues on our end...");
   };
 
   _fetchUser = () => {
@@ -147,8 +146,7 @@ class Backend {
 
   setCommittee = committee => {
     if (!Object.keys(this.committees).includes(committee)) {
-      console.error(`Unknown committee: ${committee}`);
-      message.error("We're having some issues on our end...");
+      this._reportError(`Unknown committee: ${committee}`);
       return Promise.reject();
     }
 
@@ -161,9 +159,11 @@ class Backend {
   comments = () => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
-    } else if (this.committee === undefined) {
-      console.error("Committee not defined");
-      message.error("We're having some issues on our end...");
+    }
+
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
     }
 
     return window.gapi.client.sheets.spreadsheets.values
@@ -186,6 +186,11 @@ class Backend {
   grade = (delegation, type, score, tags, text, author) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
+    }
+
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
     }
 
     return window.gapi.client.sheets.spreadsheets.values
@@ -219,6 +224,11 @@ class Backend {
   edit = (row, delegation, type, score, tags, text, author) => {
     if (!this.auth.isSignedIn.get()) {
       this.auth.signIn();
+    }
+
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
     }
 
     // We add 1 to each row because sheet ranges are 1-indexed,
@@ -255,6 +265,11 @@ class Backend {
       this.auth.signIn();
     }
 
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
+    }
+
     return window.gapi.client.sheets.spreadsheets.values
       .get({
         spreadsheetId: this.committee.sheet,
@@ -279,6 +294,11 @@ class Backend {
       this.auth.signIn();
     }
 
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
+    }
+
     return window.gapi.client.sheets.spreadsheets.batchUpdate(
       { spreadsheetId: this.committee.sheet },
       {
@@ -301,6 +321,15 @@ class Backend {
   };
 
   exportNew = (title, includeHeader) => {
+    if (!this.auth.isSignedIn.get()) {
+      this.auth.signIn();
+    }
+
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
+    }
+
     return this.comments()
       .then(comments =>
         Promise.all([
@@ -372,6 +401,15 @@ class Backend {
   };
 
   exportUpdate = (spreadsheetId, location, includeHeader) => {
+    if (!this.auth.isSignedIn.get()) {
+      this.auth.signIn();
+    }
+
+    if (this.committee === undefined) {
+      this._reportError("Committee not defined");
+      return Promise.reject();
+    }
+
     if (!/(.+?)!([A-Z])([0-9]+)/i.test(location)) {
       return Promise.reject({
         result: {

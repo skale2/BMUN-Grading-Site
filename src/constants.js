@@ -1,10 +1,4 @@
 /**
- * Google OAuth API key, used to identify the application with the Sheets API.
- * See https://cloud.google.com/docs/authentication/api-keys.
- */
-export const API_KEY = "AIzaSyDcsmVfAWv_lR2kKxqED5dGBQxuIiPzp08";
-
-/**
  * Google OAuth Client ID, used to authenticate the end user.
  * See https://cloud.google.com/docs/authentication/end-user
  */

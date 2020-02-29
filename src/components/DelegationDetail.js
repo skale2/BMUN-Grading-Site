@@ -184,7 +184,7 @@ class DelegationDetail extends React.Component {
                   <Col style={{ fontSize: "20px", fontWeight: "600" }}>
                     <Link
                       to={{
-                        pathname: `/${this.props.committee}/grade/${this.props.delegation}`,
+                        pathname: `/${this.props.committee}/grade/${this.props.delegation}/`,
                         state: { edit: comment }
                       }}
                     >
@@ -270,7 +270,7 @@ class DelegationDetail extends React.Component {
               </Col>
               <Col style={{ marginTop: "10px" }}>
                 <Link
-                  to={`/${this.props.committee}/grade/${this.props.delegation}`}
+                  to={`/${this.props.committee}/grade/${this.props.delegation}/`}
                 >
                   <Button size="large" type="primary">
                     Grade

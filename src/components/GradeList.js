@@ -59,7 +59,7 @@ class GradeList extends React.Component {
   handleKeyPress = e => {
     if (e.key === "Enter" && this.state.highlighted) {
       this.props.history.push(
-        `/${this.props.committee}/grade/${this.state.highlighted}`
+        `/${this.props.committee}/grade/${this.state.highlighted}/`
       );
     }
   };
@@ -130,7 +130,7 @@ class GradeList extends React.Component {
                       key={i}
                     >
                       <SequenceButton
-                        href={`/${this.props.committee}/grade/${name}`}
+                        href={`/${this.props.committee}/grade/${name}/`}
                         highlighted={i === 0 && this.state.highlighted != null}
                         timesSpoken={this.state.timesSpoken[name]}
                       >
@@ -139,7 +139,7 @@ class GradeList extends React.Component {
                     </animated.div>
                   ) : (
                     <SequenceButton
-                      href={`/${this.props.committee}/grade/${name}`}
+                      href={`/${this.props.committee}/grade/${name}/`}
                       highlighted={i === 0 && this.state.highlighted != null}
                       timesSpoken={this.state.timesSpoken[name]}
                       key={i}

@@ -23,13 +23,19 @@ class App extends React.Component {
       sortCommentsBy: SORTS.latest_first
     };
 
-    backend.isReadyCallBacks.push(() => this.setState({
-      backendIsReady: true
-    }));
+    backend.isReadyCallBacks.push(() =>
+      this.setState({
+        backendIsReady: true
+      })
+    );
 
-    backend.isSignedInCallBacks.push(() => this.setState({
-      backendIsSignedIn: true
-    }));
+    backend.isSignedInCallBacks.push(() =>
+      /* Set both, because backend must also be ready if we've signed in. */
+      this.setState({
+        backendIsReady: true,
+        backendIsSignedIn: true
+      })
+    );
   }
 
   render() {
@@ -84,7 +90,6 @@ class App extends React.Component {
                 location: { pathname }
               }) => {
                 if (!this.state.backendIsSignedIn) {
-                  console.log("whoops")
                   return (
                     <Redirect
                       to={{ pathname: "/welcome", state: { from: pathname } }}
