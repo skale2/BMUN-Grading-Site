@@ -15,7 +15,7 @@ const Base = props => {
         style={{ fontWeight: 700, width: "70%", margin: "1% auto 0%" }}
       >
         <Col>
-          <Link to="/welcome">
+          <Link to="/welcome/">
             <Tooltip placement="bottom" title="← Select another committee">
               {backend.committees[props.committee].name.toUpperCase()}
             </Tooltip>
@@ -24,7 +24,7 @@ const Base = props => {
         <Col>
           <div style={{ marginLeft: 10 }}>
             <Link
-              to={`/${props.committee}/export`}
+              to={`/${props.committee}/export/`}
               style={{ color: "rgba(0, 0, 0, 0.65)" }}
             >
               <Tooltip
@@ -61,13 +61,13 @@ const Base = props => {
             <Col>
               <Menu mode="horizontal" selectedKeys={[props.page]}>
                 <Menu.Item key="grade">
-                  <Link to={`/${props.committee}/grade`}>
+                  <Link to={`/${props.committee}/grade/`}>
                     <Icon type="edit" />
                     Grade
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="delegations">
-                  <Link to={`/${props.committee}/delegations`}>
+                  <Link to={`/${props.committee}/delegations/`}>
                     <Icon type="team" />
                     Delegations
                   </Link>

@@ -33,7 +33,7 @@ class Welcome extends React.Component {
   };
 
   gotoCommittee = committee => {
-    this.props.history.push(`/${backend.committeeByFullName(committee)}/grade`);
+    this.props.history.push(`/${backend.committeeByFullName(committee)}/grade/`);
   };
 
   render() {
