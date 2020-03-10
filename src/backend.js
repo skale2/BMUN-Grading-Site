@@ -95,7 +95,7 @@ class Backend {
   _fetchCommittees = () => {
     return window.gapi.client.docs.documents
       .get({
-        documentId: "1YQSUDVO4LTaJgdiTE28rArk73SD1Kxbm2zW-kzO2EYQ"
+        documentId: process.env.REACT_APP_CONFIG_DOC_ID
       })
       .then(response => {
         let content = "";
