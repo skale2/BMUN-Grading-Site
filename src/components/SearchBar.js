@@ -28,7 +28,10 @@ class SearchBar extends React.Component {
       let words = value.split(/\s+/);
       for (let word of words) {
         values.push(word);
-        valueMap[word] = value;
+        if (!valueMap.hasOwnProperty(word))
+          valueMap[word] = [value];
+        else
+          valueMap[word].push(value)
       }
     }
 
@@ -66,7 +69,7 @@ class SearchBar extends React.Component {
   dispatchUpdate = queries => {
     this.props.dispatchUpdate(
       !this.state.offPath ? queries : [],
-      this.state.query.length === 0
+      this.state.query.length === 0,
     );
   };
 
@@ -121,6 +124,8 @@ class SearchBar extends React.Component {
   };
 
   sort = (sort, queries) => {
+    if (queries === undefined) queries = this.getQueries();
+
     if (this.props.sorts === undefined) return queries;
 
     if (sort !== undefined && sort !== this.state.activeSort)
@@ -128,8 +133,6 @@ class SearchBar extends React.Component {
         activeSort: sort
       });
     else sort = this.state.activeSort;
-
-    if (queries === undefined) queries = this.getQueries();
 
     return queries.sort(this.props.sorts.getHandler(sort));
   };
@@ -204,12 +207,15 @@ class QueryTrie {
     let ch;
     let node = this.head;
 
+    let setValues = this.valueMap[val];
+
     for (let i = 0; i < val.length; i++) {
       ch = val.charAt(i).toLowerCase();
       if (!node.children[ch]) node.children[ch] = this.newNode(ch, node);
 
-      let setValue = this.valueMap[val];
-      if (node.queries.indexOf(setValue) < 0) node.queries.push(setValue);
+      for (let setVal of setValues)
+        if (!node.queries.includes(setVal))
+          node.queries.push(setVal);
 
       node = node.children[ch];
     }
@@ -218,7 +224,6 @@ class QueryTrie {
   newNode(ch, parent) {
     return {
       char: ch,
-      word: null,
       children: {},
       parent: parent,
       queries: []

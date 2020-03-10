@@ -162,7 +162,7 @@ class DelegationDetail extends React.Component {
   };
 
   commentRender = (comment, i) => (
-    <ScrollableAnchor id={comment.date.getTime()} key={i}>
+    <ScrollableAnchor id={comment.date.getTime().toString()} key={i}>
       <div style={{ padding: "1em 1em 1em 1em" }} key={i}>
         <Card
           title={
