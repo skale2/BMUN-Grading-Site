@@ -18,13 +18,8 @@ import {
   message
 } from "antd";
 import {
-  SPEAKERS_LIST,
-  MODERATED,
-  UNMODERATED,
-  FORMAL,
-  COMMENT,
   SPEECH_TYPES,
-  CRISIS,
+  SPEECH_TYPES_ORDERED,
   SORTS
 } from "../constants";
 
@@ -42,12 +37,12 @@ class DelegationDetail extends React.Component {
       score: 0,
       timesSpoken: 0,
       spoken: {
-        [SPEAKERS_LIST]: 0,
-        [MODERATED]: 0,
-        [UNMODERATED]: 0,
-        [FORMAL]: 0,
-        [COMMENT]: 0,
-        [CRISIS]: 0
+        [SPEECH_TYPES.speakersList]: 0,
+        [SPEECH_TYPES.moderated]: 0,
+        [SPEECH_TYPES.unmoderated]: 0,
+        [SPEECH_TYPES.formal]: 0,
+        [SPEECH_TYPES.comment]: 0,
+        [SPEECH_TYPES.crisis]: 0
       },
       tags: {},
       showAllTags: false,
@@ -70,18 +65,18 @@ class DelegationDetail extends React.Component {
     let score = 0;
     let timesSpoken = 0;
     let spoken = {
-      [SPEAKERS_LIST]: 0,
-      [MODERATED]: 0,
-      [UNMODERATED]: 0,
-      [FORMAL]: 0,
-      [COMMENT]: 0,
-      [CRISIS]: 0
+      [SPEECH_TYPES.speakersList]: 0,
+      [SPEECH_TYPES.moderated]: 0,
+      [SPEECH_TYPES.unmoderated]: 0,
+      [SPEECH_TYPES.formal]: 0,
+      [SPEECH_TYPES.comment]: 0,
+      [SPEECH_TYPES.crisis]: 0
     };
     let tags = {};
 
     responses.forEach(response => {
       score += response.score;
-      if (response.type !== UNMODERATED) {
+      if (response.type !== SPEECH_TYPES.unmoderated) {
         timesSpoken++;
       }
       spoken[response.type] += 1;
@@ -355,54 +350,54 @@ class DelegationDetail extends React.Component {
                 <Col>
                   <Statistic
                     title="Speaker's List"
-                    value={this.state.spoken[SPEAKERS_LIST]}
+                    value={this.state.spoken[SPEECH_TYPES.speakersList]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.speakersList] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Moderated"
-                    value={this.state.spoken[MODERATED]}
+                    value={this.state.spoken[SPEECH_TYPES.moderated]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.moderated] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Unmoderated"
-                    value={this.state.spoken[UNMODERATED]}
+                    value={this.state.spoken[SPEECH_TYPES.unmoderated]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.unmoderated] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Formal"
-                    value={this.state.spoken[FORMAL]}
+                    value={this.state.spoken[SPEECH_TYPES.formal]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.formal] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Comment"
-                    value={this.state.spoken[COMMENT]}
+                    value={this.state.spoken[SPEECH_TYPES.comment]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.comment] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
                 <Col>
                   <Statistic
                     title="Crisis"
-                    value={this.state.spoken[CRISIS]}
+                    value={this.state.spoken[SPEECH_TYPES.crisis]}
                     suffix={
-                      this.state.spoken[SPEAKERS_LIST] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.crisis] === 1 ? "time" : "times"
                     }
                   />
                 </Col>
@@ -499,7 +494,7 @@ class DelegationDetail extends React.Component {
                         }
                         allowClear
                       >
-                        {SPEECH_TYPES.map((type, i) => (
+                        {SPEECH_TYPES_ORDERED.map((type, i) => (
                           <Option key={i} value={type}>
                             {type}
                           </Option>

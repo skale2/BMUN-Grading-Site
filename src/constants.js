@@ -5,21 +5,23 @@
 export const CLIENT_ID =
   "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
 
-export const SPEAKERS_LIST = "Speaker's List";
-export const MODERATED = "Moderated";
-export const UNMODERATED = "Unmoderated";
-export const FORMAL = "Formal";
-export const COMMENT = "Comment";
-export const CRISIS = "Crisis";
+export const SPEECH_TYPES = {
+  speakersList: "Speaker's List",
+  moderated: "Moderated",
+  unmoderated: "Unmoderated",
+  formal: "Formal",
+  comment: "Comment",
+  crisis: "Crisis"
+};
 
-export const SPEECH_TYPES = [
-  SPEAKERS_LIST,
-  MODERATED,
-  UNMODERATED,
-  FORMAL,
-  COMMENT,
-  CRISIS
-];
+export const SPEECH_TYPES_ORDERED = [
+  "Speaker's List",
+  "Moderated",
+  "Unmoderated",
+  "Formal",
+  "Comment",
+  "Crisis"
+]
 
 export const TAGS = [
   "Great Points",

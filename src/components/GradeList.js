@@ -3,7 +3,7 @@ import { Spring, animated, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
 import { Empty, Spin } from "antd";
 
-import { UNMODERATED, SORTS } from "../constants";
+import { SORTS, SPEECH_TYPES } from "../constants";
 
 import SearchBar from "./SearchBar";
 import SequenceButton from "./SequenceButton";
@@ -25,28 +25,27 @@ class GradeList extends React.Component {
   }
 
   componentDidMount() {
-    backend.comments()
-      .then(result => {
-        let timesSpoken = {};
+    backend.comments().then(result => {
+      let timesSpoken = {};
 
-        for (const delegationName of backend.committee.delegations) {
-          timesSpoken[delegationName] = 0;
+      for (const delegationName of backend.committee.delegations) {
+        timesSpoken[delegationName] = 0;
+      }
+
+      for (const row of result) {
+        if (row.type !== SPEECH_TYPES.unmoderated) {
+          timesSpoken[row.delegation]++;
         }
+      }
 
-        for (const row of result) {
-          if (row.type !== UNMODERATED) {
-            timesSpoken[row.delegation]++;
-          }
-        }
-
-        this.setState({
-          timesSpoken: timesSpoken,
-          loading: false,
-          delegations: backend.committee.delegations.sort(
-            this.sort(this.props.sortDelegationsBy)
-          )
-        });
+      this.setState({
+        timesSpoken: timesSpoken,
+        loading: false,
+        delegations: backend.committee.delegations.sort(
+          this.sort(this.props.sortDelegationsBy)
+        )
       });
+    });
   }
 
   dispatchUpdate = (delegations, emptyQuery) => {
@@ -97,9 +96,16 @@ class GradeList extends React.Component {
           values={backend.committee.delegations}
           dispatchUpdate={this.dispatchUpdate}
           placeHolder="Type in a delegation to grade"
-          defaultSort={this.props.sortDelegationsBy}
-          sorts={[SORTS.a_z, SORTS.z_a, SORTS.spoken_most, SORTS.spoken_least]}
-          getSort={this.sort}
+          sorts={{
+            default: this.props.sortDelegationsBy,
+            values: [
+              SORTS.a_z,
+              SORTS.z_a,
+              SORTS.spoken_most,
+              SORTS.spoken_least
+            ],
+            getHandler: this.sort
+          }}
         />
         <div
           style={{

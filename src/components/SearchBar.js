@@ -21,21 +21,27 @@ class SearchBar extends React.Component {
   constructor(props) {
     super(props);
 
-    let { values, dispatchUpdate, placeHolder } = props;
+    let values = [];
+    let valueMap = {};
 
-    this.trie = new QueryTrie(values);
-    this.dispatchUpdate = dispatchUpdate;
-    this.placeHolder = placeHolder;
+    for (let value of props.values) {
+      let words = value.split(/\s+/);
+      for (let word of words) {
+        values.push(word);
+        valueMap[word] = value;
+      }
+    }
+
+    this.trie = new QueryTrie(values, valueMap);
 
     this.searchRef = React.createRef();
 
     this.state = {
-      selected: false,
       query: "",
       node: this.trie.head,
       darken: 0,
       offPath: 0,
-      sorts: props.sorts
+      activeSort: props.sorts !== undefined ? props.sorts.default : () => -1
     };
   }
 
@@ -51,6 +57,17 @@ class SearchBar extends React.Component {
   handleScroll = () => {
     let scrollTop = window.scrollY;
     this.setState({ darken: Math.min(0.8, scrollTop / 300) });
+  };
+
+  getQueries = () => {
+    return this.state.node.queries;
+  };
+
+  dispatchUpdate = queries => {
+    this.props.dispatchUpdate(
+      !this.state.offPath ? queries : [],
+      this.state.query.length === 0
+    );
   };
 
   updateResults = event => {
@@ -99,23 +116,22 @@ class SearchBar extends React.Component {
         query: query,
         offPath: offPath
       },
-      () =>
-        this.dispatchUpdate(
-          !this.state.offPath ? this.state.node.queries : [],
-          query.length === 0
-        )
+      () => this.dispatchUpdate(this.sort())
     );
   };
 
-  sort = value => {
-    if (this.props.sorts === undefined) return;
+  sort = (sort, queries) => {
+    if (this.props.sorts === undefined) return queries;
 
-    let queries = this.state.node.queries.sort(this.props.getSort(value));
+    if (sort !== undefined && sort !== this.state.activeSort)
+      this.setState({
+        activeSort: sort
+      });
+    else sort = this.state.activeSort;
 
-    this.dispatchUpdate(
-      !this.state.offPath ? queries : [],
-      this.state.query.length === 0
-    );
+    if (queries === undefined) queries = this.getQueries();
+
+    return queries.sort(this.props.sorts.getHandler(sort));
   };
 
   render() {
@@ -127,9 +143,9 @@ class SearchBar extends React.Component {
           align="middle"
           style={{ marginBottom: 20 }}
         >
-          <Col span={this.props.sorts !== undefined ? 19 : 24}>
+          <Col span={24 - (this.props.sorts !== undefined ? 5 : 0)}>
             <Search
-              placeholder={this.placeHolder}
+              placeholder={this.props.placeHolder}
               onChange={this.updateResults}
               size="large"
               style={{
@@ -160,10 +176,10 @@ class SearchBar extends React.Component {
                     this.state.darken +
                     ")"
                 }}
-                defaultValue={this.props.defaultSort}
-                onChange={this.sort}
+                defaultValue={this.props.sorts.default}
+                onChange={sort => this.dispatchUpdate(this.sort(sort))}
               >
-                {this.props.sorts.map((sort, i) => (
+                {this.props.sorts.values.map((sort, i) => (
                   <Option key={i} value={sort}>
                     {sort}
                   </Option>
@@ -178,11 +194,10 @@ class SearchBar extends React.Component {
 }
 
 class QueryTrie {
-  constructor(values) {
+  constructor(values, valueMap) {
     this.head = this.newNode(null, null);
-    for (let val of values) {
-      this.addQuery(val);
-    }
+    this.valueMap = valueMap;
+    for (let val of values) this.addQuery(val);
   }
 
   addQuery(val) {
@@ -191,15 +206,12 @@ class QueryTrie {
 
     for (let i = 0; i < val.length; i++) {
       ch = val.charAt(i).toLowerCase();
-      if (!node.children[ch]) {
-        node.children[ch] = this.newNode(ch, node);
-      }
-      node = node.children[ch];
-    }
+      if (!node.children[ch]) node.children[ch] = this.newNode(ch, node);
 
-    while (node) {
-      node.queries.push(val);
-      node = node.parent;
+      let setValue = this.valueMap[val];
+      if (node.queries.indexOf(setValue) < 0) node.queries.push(setValue);
+
+      node = node.children[ch];
     }
   }
 

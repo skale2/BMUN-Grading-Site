@@ -12,18 +12,9 @@ import {
   Tag,
   message
 } from "antd";
-import {
-  SPEAKERS_LIST,
-  MODERATED,
-  UNMODERATED,
-  FORMAL,
-  COMMENT,
-  CRISIS
-} from "../constants";
 import ScrollableAnchor from "react-scrollable-anchor";
 import { goToAnchor, configureAnchors } from "react-scrollable-anchor";
-
-import { TAGS, SPEECH_TYPES } from "../constants";
+import { TAGS, SPEECH_TYPES, SPEECH_TYPES_ORDERED } from "../constants";
 import backend from "../backend";
 
 import { tagStyle } from "../style";
@@ -39,7 +30,7 @@ class GradeDetail extends React.Component {
       this.state = {
         editingRow: row,
         focus: 0,
-        type: SPEECH_TYPES.indexOf(type),
+        type: SPEECH_TYPES_ORDERED.indexOf(type),
         score: score,
         tags: new Set(tags),
         focusingOnText: false,
@@ -216,12 +207,12 @@ class GradeDetail extends React.Component {
                     <Col span={18}>
                       <Row type="flex" justify="center">
                         {[
-                          SPEAKERS_LIST,
-                          MODERATED,
-                          UNMODERATED,
-                          FORMAL,
-                          COMMENT,
-                          CRISIS
+                          SPEECH_TYPES.speakersList,
+                          SPEECH_TYPES.moderated,
+                          SPEECH_TYPES.unmoderated,
+                          SPEECH_TYPES.formal,
+                          SPEECH_TYPES.comment,
+                          SPEECH_TYPES.crisis
                         ].map((val, i) => (
                           <Col key={i}>
                             <Button
