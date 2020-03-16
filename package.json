@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/dark-theme": "^2.0.1",
-    "antd": "^4.0.2",
+    "antd": "^3.26.13",
     "gapi": "0.0.3",
     "moment": "^2.24.0",
     "react": "^16.13.0",
