@@ -1,9 +1,3 @@
-/**
- * Google OAuth Client ID, used to authenticate the end user.
- * See https://cloud.google.com/docs/authentication/end-user
- */
-export const CLIENT_ID =
-  "629249540008-mgv1q5m3sh5f700r1teji7acopl8aavn.apps.googleusercontent.com";
 
 export const SPEECH_TYPES = {
   speakersList: "Speaker's List",

@@ -1,6 +1,6 @@
 import moment from "moment";
 import { message } from "antd";
-import { CLIENT_ID, SPEECH_TYPES_ORDERED } from "./constants";
+import { SPEECH_TYPES_ORDERED } from "./constants";
 
 const DISCOVERY_DOCS = [
   "https://sheets.googleapis.com/$discovery/rest?version=v4",
@@ -44,7 +44,7 @@ class Backend {
   _initClient = () => {
     window.gapi.client
       .init({
-        clientId: CLIENT_ID,
+        clientId: process.env.REACT_APP_GAPI_CLIENT_ID,
         scope: SCOPE,
         discoveryDocs: DISCOVERY_DOCS
       })
