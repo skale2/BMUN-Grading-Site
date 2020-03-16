@@ -20,7 +20,7 @@ class SequenceButton extends React.Component {
             : null
         }}
       >
-        <Row type="flex" justify="space-between" align="middle">
+        <Row type="flex" justify="space-between" align="space-between">
           <Col style={{ fontWeight: "600" }}>{this.props.children}</Col>
           <Col>
             <Row type="flex" gutter={20} justify="end">
