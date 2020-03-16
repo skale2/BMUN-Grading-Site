@@ -1,6 +1,6 @@
 import moment from "moment";
 import { message } from "antd";
-import { CLIENT_ID, SPEECH_TYPES } from "./constants";
+import { CLIENT_ID, SPEECH_TYPES_ORDERED } from "./constants";
 
 const DISCOVERY_DOCS = [
   "https://sheets.googleapis.com/$discovery/rest?version=v4",
@@ -117,7 +117,7 @@ class Backend {
       row: i,
       date: new Date(parseInt(row[0])),
       delegation: row[1],
-      type: SPEECH_TYPES[parseInt(row[2])],
+      type: SPEECH_TYPES_ORDERED[parseInt(row[2])],
       score: parseInt(row[3]),
       tags: row[4] !== undefined && row[4].length > 0 ? row[4].split(",") : [],
       text: row[5] !== undefined ? row[5] : "",
