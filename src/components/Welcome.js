@@ -3,7 +3,6 @@ import { Spring, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
 import { Row, Button } from "antd";
 import backend from "../backend";
-import { GoogleOutlined } from "@ant-design/icons";
 import CommitteeSelect from "./CommitteeSelect";
 import logo from "../logo.png";
 
@@ -72,7 +71,7 @@ class Welcome extends React.Component {
               >
                 <Row type="flex" justify="center">
                   <Button
-                    icon={<GoogleOutlined />}
+                    icon="google"
                     type="primary"
                     size={"large"}
                     disabled={!this.state.backendIsReady}

@@ -15,9 +15,8 @@ import {
   Spin,
   Popconfirm,
   Select,
-  message
+  message,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { SPEECH_TYPES, SPEECH_TYPES_ORDERED, SORTS } from "../constants";
 
 import backend from "../backend";
@@ -179,7 +178,7 @@ class DelegationDetail extends React.Component {
                         state: { edit: comment }
                       }}
                     >
-                      <Button icon={<EditOutlined />} shape="circle" />
+                      <Button icon="edit" shape="circle" />
                     </Link>
                   </Col>
                   <Col style={{ fontSize: "20px", fontWeight: "600" }}>
@@ -191,7 +190,7 @@ class DelegationDetail extends React.Component {
                       cancelText="No"
                     >
                       <Button
-                        icon={<DeleteOutlined />}
+                        icon="delete"
                         shape="circle"
                         type="danger"
                         style={{ marginLeft: 8 }}

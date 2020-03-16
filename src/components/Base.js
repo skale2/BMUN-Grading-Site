@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Layout, Menu, Row, Col, Tooltip, Avatar } from "antd";
-import { ExportOutlined, EditOutlined, TeamOutlined } from "@ant-design/icons";
+import { Layout, Menu, Row, Col, Tooltip, Avatar, Icon } from "antd";
 import { Link } from "react-router-dom";
 
 import backend from "../backend";
@@ -32,7 +31,7 @@ const Base = props => {
                 placement="bottom"
                 title="Export committee to spreadsheet"
               >
-                <ExportOutlined />
+                <Icon type="export" />
               </Tooltip>
             </Link>
           </div>
@@ -63,13 +62,13 @@ const Base = props => {
               <Menu mode="horizontal" selectedKeys={[props.page]}>
                 <Menu.Item key="grade">
                   <Link to={`/${props.committee}/grade/`}>
-                    <EditOutlined style={{ marginRight: "10px" }} />
+                    <Icon type="edit" style={{ marginRight: "10px" }} />
                     Grade
                   </Link>
                 </Menu.Item>
                 <Menu.Item key="delegations">
                   <Link to={`/${props.committee}/delegations/`}>
-                    <TeamOutlined style={{ marginRight: "10px" }} />
+                    <Icon type="team" style={{ marginRight: "10px" }} />
                     Delegations
                   </Link>
                 </Menu.Item>

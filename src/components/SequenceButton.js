@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Row, Col, Button } from "antd";
-import { EnterOutlined } from "@ant-design/icons";
+import { Row, Col, Button, Icon } from "antd";
 
 class SequenceButton extends React.Component {
   render() {
@@ -26,7 +25,7 @@ class SequenceButton extends React.Component {
             <Row type="flex" gutter={20} justify="end">
               {this.props.highlighted ? (
                 <Col>
-                  <EnterOutlined style={{ marginRight: "5px" }} />
+                  <Icon type="enter" style={{ marginRight: "5px" }} />
                   <div style={{ fontSize: "12px", fontWeight: 700 }}>ENTER</div>
                 </Col>
               ) : null}

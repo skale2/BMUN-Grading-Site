@@ -140,7 +140,7 @@ class GradeList extends React.Component {
                         highlighted={i === 0 && this.state.highlighted != null}
                         timesSpoken={this.state.timesSpoken[name]}
                       >
-                        {name}
+                        <div style={{ marginTop: "8px" }}>{name}</div>
                       </SequenceButton>
                     </animated.div>
                   ) : (
@@ -150,7 +150,7 @@ class GradeList extends React.Component {
                       timesSpoken={this.state.timesSpoken[name]}
                       key={i}
                     >
-                      {name}
+                      <div style={{ marginTop: "8px" }}>{name}</div>
                     </SequenceButton>
                   )
                 )
