@@ -1,4 +1,4 @@
-# MUN Grading App
+# BMUN Grading Site
 
 Visit the [public site](https://bmun-grade-public.onrender.com) to test out this app!
 
