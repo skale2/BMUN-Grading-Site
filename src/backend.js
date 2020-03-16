@@ -7,7 +7,7 @@ const DISCOVERY_DOCS = [
   "https://docs.googleapis.com/$discovery/rest?version=v1"
 ];
 const SCOPE =
-  "https://www.googleapis.com/auth/drive " + 
+  "https://www.googleapis.com/auth/drive " +
   "https://www.googleapis.com/auth/drive.file " +
   "https://www.googleapis.com/auth/spreadsheets " +
   "https://www.googleapis.com/auth/documents.readonly";
@@ -46,7 +46,7 @@ class Backend {
       .init({
         clientId: CLIENT_ID,
         scope: SCOPE,
-        discoveryDocs: DISCOVERY_DOCS,
+        discoveryDocs: DISCOVERY_DOCS
       })
       .then(
         () => {

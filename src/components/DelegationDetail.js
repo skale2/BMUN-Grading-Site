@@ -17,11 +17,8 @@ import {
   Select,
   message
 } from "antd";
-import {
-  SPEECH_TYPES,
-  SPEECH_TYPES_ORDERED,
-  SORTS
-} from "../constants";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { SPEECH_TYPES, SPEECH_TYPES_ORDERED, SORTS } from "../constants";
 
 import backend from "../backend";
 
@@ -57,8 +54,7 @@ class DelegationDetail extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    backend.status(this.props.delegation)
-      .then(this.setDelegationInfo);
+    backend.status(this.props.delegation).then(this.setDelegationInfo);
   }
 
   setDelegationInfo = responses => {
@@ -176,14 +172,14 @@ class DelegationDetail extends React.Component {
               </Col>
               <Col>
                 <Row type="flex" align="middle" justify="space-between">
-                  <Col style={{ fontSize: "20px", fontWeight: "600" }}>
+                  <Col style={{ fontSize: "12px", fontWeight: "600" }}>
                     <Link
                       to={{
                         pathname: `/${this.props.committee}/grade/${this.props.delegation}/`,
                         state: { edit: comment }
                       }}
                     >
-                      <Button icon="edit" shape="circle" />
+                      <Button icon={<EditOutlined />} shape="circle" />
                     </Link>
                   </Col>
                   <Col style={{ fontSize: "20px", fontWeight: "600" }}>
@@ -195,7 +191,7 @@ class DelegationDetail extends React.Component {
                       cancelText="No"
                     >
                       <Button
-                        icon="delete"
+                        icon={<DeleteOutlined />}
                         shape="circle"
                         type="danger"
                         style={{ marginLeft: 8 }}
@@ -273,7 +269,6 @@ class DelegationDetail extends React.Component {
                 </Link>
               </Col>
             </Row>
-
             <Divider />
             <animated.div
               style={{
@@ -352,7 +347,9 @@ class DelegationDetail extends React.Component {
                     title="Speaker's List"
                     value={this.state.spoken[SPEECH_TYPES.speakersList]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.speakersList] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.speakersList] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -361,7 +358,9 @@ class DelegationDetail extends React.Component {
                     title="Moderated"
                     value={this.state.spoken[SPEECH_TYPES.moderated]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.moderated] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.moderated] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -370,7 +369,9 @@ class DelegationDetail extends React.Component {
                     title="Unmoderated"
                     value={this.state.spoken[SPEECH_TYPES.unmoderated]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.unmoderated] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.unmoderated] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -379,7 +380,9 @@ class DelegationDetail extends React.Component {
                     title="Formal"
                     value={this.state.spoken[SPEECH_TYPES.formal]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.formal] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.formal] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -388,7 +391,9 @@ class DelegationDetail extends React.Component {
                     title="Comment"
                     value={this.state.spoken[SPEECH_TYPES.comment]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.comment] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.comment] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -397,7 +402,9 @@ class DelegationDetail extends React.Component {
                     title="Crisis"
                     value={this.state.spoken[SPEECH_TYPES.crisis]}
                     suffix={
-                      this.state.spoken[SPEECH_TYPES.crisis] === 1 ? "time" : "times"
+                      this.state.spoken[SPEECH_TYPES.crisis] === 1
+                        ? "time"
+                        : "times"
                     }
                   />
                 </Col>
@@ -419,35 +426,37 @@ class DelegationDetail extends React.Component {
                     marginTop: "4em"
                   }}
                 >
-                  <Row style={{ marginBottom: "1em" }}>Tags</Row>
-                  <Row>
-                    {Object.entries(this.state.tags)
-                      .sort(
-                        ([, frequency1], [, frequency2]) =>
-                          frequency2 - frequency1
-                      )
-                      .slice(
-                        0,
-                        this.state.showAllTags ? this.state.tags.length : 5
-                      )
-                      .map(([tag, frequency], i) => (
-                        <Tag style={tagStyle} key={i}>
-                          {`${tag} (${frequency})`}
-                        </Tag>
-                      ))}
-                    {this.state.tags.length > 5 ? (
-                      <Button
-                        type="link"
-                        onClick={() =>
-                          this.setState({
-                            showAllTags: !this.state.showAllTags
-                          })
-                        }
-                      >
-                        {this.state.showAllTags ? "show less" : "show more"}
-                      </Button>
-                    ) : null}
-                  </Row>
+                  <div>
+                    <Row style={{ marginBottom: "1em" }}>Tags</Row>
+                    <Row>
+                      {Object.entries(this.state.tags)
+                        .sort(
+                          ([, frequency1], [, frequency2]) =>
+                            frequency2 - frequency1
+                        )
+                        .slice(
+                          0,
+                          this.state.showAllTags ? this.state.tags.length : 5
+                        )
+                        .map(([tag, frequency], i) => (
+                          <Tag style={tagStyle} key={i}>
+                            {`${tag} (${frequency})`}
+                          </Tag>
+                        ))}
+                      {this.state.tags.length > 5 ? (
+                        <Button
+                          type="link"
+                          onClick={() =>
+                            this.setState({
+                              showAllTags: !this.state.showAllTags
+                            })
+                          }
+                        >
+                          {this.state.showAllTags ? "show less" : "show more"}
+                        </Button>
+                      ) : null}
+                    </Row>
+                  </div>
                 </Row>
               </animated.div>
             ) : null}
@@ -529,68 +538,68 @@ class DelegationDetail extends React.Component {
                 </Col>
               </Row>
             </animated.div>
-
-            <Row style={{ marginTop: "2em" }}>
-              {this.state.displayedComments.length === 0 ? (
-                <animated.div
-                  style={{
-                    transform: props.time.interpolate(
-                      time => `translateY(${150 * (1 - time)}px)`
-                    ),
-                    opacity: props.time
-                  }}
-                >
-                  <Empty description="No comments yet! Did you try a different set of filters?" />
-                </animated.div>
-              ) : (
-                <div>
-                  <Col span={12}>
-                    {this.state.displayedComments
-                      .filter((_, i) => i % 2 === 0)
-                      .map((comment, i) =>
-                        /* Some stuff to avoid animating comments not on screen. */
-                        i < (window.innerHeight - 700) / 100 ? (
-                          <animated.div
-                            style={{
-                              transform: props.time.interpolate(
-                                time =>
-                                  `translateY(${(150 + 25 * i) * (1 - time)}px)`
-                              ),
-                              opacity: props.time
-                            }}
-                          >
-                            {this.commentRender(comment, i)}
-                          </animated.div>
-                        ) : (
-                          this.commentRender(comment, i)
-                        )
-                      )}
-                  </Col>
-                  <Col span={12}>
-                    {this.state.displayedComments
-                      .filter((_, i) => i % 2 === 1)
-                      .map((comment, i) =>
-                        /* Some stuff to avoid animating comments not on screen. */
-                        i < (window.innerHeight - 700) / 100 ? (
-                          <animated.div
-                            style={{
-                              transform: props.time.interpolate(
-                                time =>
-                                  `translateY(${(150 + 25 * i) * (1 - time)}px)`
-                              ),
-                              opacity: props.time
-                            }}
-                          >
-                            {this.commentRender(comment, i)}
-                          </animated.div>
-                        ) : (
-                          this.commentRender(comment, i)
-                        )
-                      )}
-                  </Col>
-                </div>
-              )}
-            </Row>
+            {this.state.displayedComments.length === 0 ? (
+              <animated.div
+                style={{
+                  transform: props.time.interpolate(
+                    time => `translateY(${150 * (1 - time)}px)`
+                  ),
+                  opacity: props.time
+                }}
+              >
+                <Empty
+                  style={{ marginTop: "2em" }}
+                  description="No comments yet! Did you try a different set of filters?"
+                />
+              </animated.div>
+            ) : (
+              <Row style={{ marginTop: "2em" }}>
+                <Col span={12}>
+                  {this.state.displayedComments
+                    .filter((_, i) => i % 2 === 0)
+                    .map((comment, i) =>
+                      /* Some stuff to avoid animating comments not on screen. */
+                      i < (window.innerHeight - 700) / 100 ? (
+                        <animated.div
+                          style={{
+                            transform: props.time.interpolate(
+                              time =>
+                                `translateY(${(150 + 25 * i) * (1 - time)}px)`
+                            ),
+                            opacity: props.time
+                          }}
+                        >
+                          {this.commentRender(comment, i)}
+                        </animated.div>
+                      ) : (
+                        this.commentRender(comment, i)
+                      )
+                    )}
+                </Col>
+                <Col span={12}>
+                  {this.state.displayedComments
+                    .filter((_, i) => i % 2 === 1)
+                    .map((comment, i) =>
+                      /* Some stuff to avoid animating comments not on screen. */
+                      i < (window.innerHeight - 700) / 100 ? (
+                        <animated.div
+                          style={{
+                            transform: props.time.interpolate(
+                              time =>
+                                `translateY(${(150 + 25 * i) * (1 - time)}px)`
+                            ),
+                            opacity: props.time
+                          }}
+                        >
+                          {this.commentRender(comment, i)}
+                        </animated.div>
+                      ) : (
+                        this.commentRender(comment, i)
+                      )
+                    )}
+                </Col>
+              </Row>
+            )}
           </div>
         )}
       </Spring>

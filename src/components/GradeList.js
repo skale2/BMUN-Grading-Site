@@ -110,7 +110,7 @@ class GradeList extends React.Component {
         <div
           style={{
             margin: "0 auto",
-            width: "80%"
+            width: "75%"
           }}
         >
           {!this.state.delegations.length ? (

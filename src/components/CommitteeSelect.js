@@ -30,7 +30,7 @@ class CommitteeSelect extends React.Component {
 
   handleKeyPress = e => {
     if (e.key === "Enter" && this.state.highlighted) {
-      console.log(this.state.highlighted)
+      console.log(this.state.highlighted);
       this.props.history.push(
         `/${backend.committeeByFullName(this.state.highlighted)}/grade`
       );

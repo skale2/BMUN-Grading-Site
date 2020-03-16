@@ -20,7 +20,9 @@ class Export extends React.Component {
     super(props);
     this.state = {
       createPath: {
-        sheetName: `Committee Grading (${backend.committees[props.committee].name})`,
+        sheetName: `Committee Grading (${
+          backend.committees[props.committee].name
+        })`,
         includeHeader: true,
         loading: false
       },
@@ -164,105 +166,110 @@ class Export extends React.Component {
                 opacity: props.time
               }}
             >
+              <Row>
+                <Title
+                  style={{ color: "rgb(89, 89, 89", margin: "1em 0em 1.5em" }}
+                  level={3}
+                >
+                  Create a new spreadsheet
+                </Title>
+              </Row>
               <Form>
-                <Row>
-                  <Title
-                    style={{ color: "rgb(89, 89, 89", margin: "1em 0em 1.5em" }}
-                    level={3}
-                  >
-                    Create a new spreadsheet
-                  </Title>
-                </Row>
-                <Row style={{ width: "70%", margin: "0em auto 5em" }}>
-                  <div
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 500,
-                      margin: "0em 0em 0.5em"
-                    }}
-                  >
-                    Title
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 16,
-                      fontWeight: 400,
-                      marginBottom: "2em"
-                    }}
-                  >
-                    The name of the new spreadsheet.
-                  </div>
-                  <Form.Item
-                    style={{
-                      marginBottom: "3em"
-                    }}
-                  >
-                    <Input
-                      size="large"
-                      placeholder={`Committee Grading (${
-                        backend.committees[this.props.committee].name
-                      })`}
-                      value={this.state.createPath.sheetName}
-                      style={{ fontWeight: 500 }}
-                      onChange={e => {
-                        this.setState({
-                          createPath: {
-                            ...this.state.createPath,
-                            sheetName: e.target.value
-                          }
-                        });
+                <Row justify="center">
+                  <Col style={{ width: "70%", margin: "0 auto" }}>
+                    <div
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 500,
+                        margin: "0em 0em 0.5em"
                       }}
-                    />
-                  </Form.Item>
-                  <Form.Item style={{ marginBottom: "4em" }}>
-                    <Row type="flex" gutter={20}>
-                      <Col
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 500,
-                          marginBottom: "0.5em"
-                        }}
-                      >
-                        Include header row
-                      </Col>
-                      <Col>
-                        <Switch
-                          checked={this.state.createPath.includeHeader}
-                          onChange={checked =>
-                            this.setState({
-                              createPath: {
-                                ...this.state.createPath,
-                                includeHeader: checked
-                              }
-                            })
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <div style={{ fontSize: 16, fontWeight: 400 }}>
-                      Whether to include an extra header row with column names.
+                    >
+                      Title
                     </div>
-                  </Form.Item>
-                  <Button
-                    icon={this.state.createPath.loading ? "loading" : undefined}
-                    style={{
-                      float: "right"
-                    }}
-                    size="large"
-                    type="primary"
-                    disabled={
-                      this.state.createPath.sheetName.length === 0 ||
-                      this.state.createPath.loading
-                    }
-                    onClick={() =>
-                      this.exportNew(
-                        this.state.createPath.sheetName,
-                        this.state.createPath.includeHeader
-                      )
-                    }
-                  >
-                    Export
-                  </Button>
+                    <div
+                      style={{
+                        fontSize: 16,
+                        fontWeight: 400,
+                        marginBottom: "2em"
+                      }}
+                    >
+                      The name of the new spreadsheet.
+                    </div>
+                    <Form.Item
+                      style={{
+                        marginBottom: "3em"
+                      }}
+                    >
+                      <Input
+                        size="large"
+                        placeholder={`Committee Grading (${
+                          backend.committees[this.props.committee].name
+                        })`}
+                        value={this.state.createPath.sheetName}
+                        style={{ fontWeight: 500 }}
+                        onChange={e => {
+                          this.setState({
+                            createPath: {
+                              ...this.state.createPath,
+                              sheetName: e.target.value
+                            }
+                          });
+                        }}
+                      />
+                    </Form.Item>
+                    <Form.Item style={{ marginBottom: "4em" }}>
+                      <Row type="flex" gutter={20}>
+                        <Col
+                          style={{
+                            fontSize: 18,
+                            fontWeight: 500,
+                            marginBottom: "0.5em"
+                          }}
+                        >
+                          Include header row
+                        </Col>
+                        <Col>
+                          <Switch
+                            checked={this.state.createPath.includeHeader}
+                            onChange={checked =>
+                              this.setState({
+                                createPath: {
+                                  ...this.state.createPath,
+                                  includeHeader: checked
+                                }
+                              })
+                            }
+                          />
+                        </Col>
+                      </Row>
+                      <div style={{ fontSize: 16, fontWeight: 400 }}>
+                        Whether to include an extra header row with column
+                        names.
+                      </div>
+                    </Form.Item>
+                    <Button
+                      icon={
+                        this.state.createPath.loading ? "loading" : undefined
+                      }
+                      style={{
+                        float: "right"
+                      }}
+                      size="large"
+                      type="primary"
+                      disabled={
+                        this.state.createPath.sheetName.length === 0 ||
+                        this.state.createPath.loading
+                      }
+                      onClick={() =>
+                        this.exportNew(
+                          this.state.createPath.sheetName,
+                          this.state.createPath.includeHeader
+                        )
+                      }
+                    >
+                      Export
+                    </Button>
+                  </Col>
                 </Row>
               </Form>
             </animated.div>
@@ -290,11 +297,8 @@ class Export extends React.Component {
                 </Title>
               </Row>
               <Form>
-                <Row
-                  style={{ width: "70%", margin: "0 auto" }}
-                  justify="center"
-                >
-                  <Col>
+                <Row justify="center">
+                  <Col style={{ width: "70%", margin: "0 auto" }}>
                     <div
                       style={{
                         fontSize: 18,

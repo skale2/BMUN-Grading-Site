@@ -3,7 +3,9 @@ import { Spring, config } from "react-spring/renderprops";
 import { withRouter } from "react-router-dom";
 import { Row, Button } from "antd";
 import backend from "../backend";
+import { GoogleOutlined } from "@ant-design/icons";
 import CommitteeSelect from "./CommitteeSelect";
+import logo from "../logo.png";
 
 class Welcome extends React.Component {
   constructor(props) {
@@ -12,14 +14,12 @@ class Welcome extends React.Component {
       step: backend.isSignedIn ? 1 : 0,
       backendIsReady: backend.isReady
     };
-    
+
     backend.isReadyCallBacks.push(() =>
       this.setState({ backendIsReady: true })
     );
 
-    backend.isSignedInCallBacks.push(() =>
-      this.setState({ step: 1 })
-    );
+    backend.isSignedInCallBacks.push(() => this.setState({ step: 1 }));
   }
 
   signIn = () => {
@@ -33,7 +33,9 @@ class Welcome extends React.Component {
   };
 
   gotoCommittee = committee => {
-    this.props.history.push(`/${backend.committeeByFullName(committee)}/grade/`);
+    this.props.history.push(
+      `/${backend.committeeByFullName(committee)}/grade/`
+    );
   };
 
   render() {
@@ -53,7 +55,12 @@ class Welcome extends React.Component {
           >
             <Row type="flex" justify="center">
               <span role="img" aria-label="UN">
-                Hello 🇺🇳
+                <img
+                  src={logo}
+                  alt="BMUN logo"
+                  height={250 - 50 * props.time}
+                  style={{ opacity: 0.5 }}
+                />
               </span>
             </Row>
             {props.time < 0.6 ? (
@@ -65,7 +72,7 @@ class Welcome extends React.Component {
               >
                 <Row type="flex" justify="center">
                   <Button
-                    icon={!this.state.backendIsReady ? "loading" : "google"}
+                    icon={<GoogleOutlined />}
                     type="primary"
                     size={"large"}
                     disabled={!this.state.backendIsReady}

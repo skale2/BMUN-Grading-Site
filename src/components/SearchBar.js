@@ -28,10 +28,8 @@ class SearchBar extends React.Component {
       let words = value.split(/\s+/);
       for (let word of words) {
         values.push(word);
-        if (!valueMap.hasOwnProperty(word))
-          valueMap[word] = [value];
-        else
-          valueMap[word].push(value)
+        if (!valueMap.hasOwnProperty(word)) valueMap[word] = [value];
+        else valueMap[word].push(value);
       }
     }
 
@@ -69,7 +67,7 @@ class SearchBar extends React.Component {
   dispatchUpdate = queries => {
     this.props.dispatchUpdate(
       !this.state.offPath ? queries : [],
-      this.state.query.length === 0,
+      this.state.query.length === 0
     );
   };
 
@@ -152,7 +150,7 @@ class SearchBar extends React.Component {
               onChange={this.updateResults}
               size="large"
               style={{
-                height: 60,
+                height: "55px",
                 borderRadius: "5px",
                 boxShadow:
                   "0px 0px 100px 20px rgba(170, 170, 170, " +
@@ -214,8 +212,7 @@ class QueryTrie {
       if (!node.children[ch]) node.children[ch] = this.newNode(ch, node);
 
       for (let setVal of setValues)
-        if (!node.queries.includes(setVal))
-          node.queries.push(setVal);
+        if (!node.queries.includes(setVal)) node.queries.push(setVal);
 
       node = node.children[ch];
     }

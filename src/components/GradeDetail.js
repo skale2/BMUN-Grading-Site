@@ -403,12 +403,13 @@ class GradeDetail extends React.Component {
                   size="large"
                   style={{
                     float: "right",
-                    fontSize: "20px"
+                    fontSize: "20px",
+                    height: "50px"
                   }}
                   onClick={this.handleSubmit}
                   disabled={this.state.type < 0 || this.state.score < 0}
                 >
-                  <Row type="flex" align="middle" justify="space-between">
+                  <Row align="middle" justify="space-between">
                     <Col span={5}>Submit</Col>
                     <Col span={7}>
                       <div style={{ fontSize: "10px", marginRight: "1em" }}>
