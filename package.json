@@ -6,7 +6,7 @@
     "@ant-design/dark-theme": "^2.0.1",
     "antd": "^3.26.13",
     "gapi": "0.0.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-router-dom": "^5.1.2",
